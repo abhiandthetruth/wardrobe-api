@@ -1,0 +1,269 @@
+openapi: 3.0.0
+info:
+  title: Digital Wardrobe API
+  version: 1.0.0
+  description: API for managing digital wardrobes and clothing items
+tags:
+  - name: Wardrobe
+    description: orchestrate your wardrobe
+  - name: Item
+    description: manage your items
+paths:
+  /wardrobes:
+    post:
+      tags:
+        - Wardrobe
+      summary: Create a Wardrobe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardrobeInput'
+      responses:
+        '201':
+          description: Wardrobe created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wardrobe'
+    get:
+      tags:
+        - Wardrobe
+      summary: Get All Wardrobes
+      responses:
+        '200':
+          description: List of all wardrobes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wardrobe'
+
+  /wardrobes/{wardrobeId}:
+    get:
+      tags:
+        - Wardrobe
+      summary: Get a Wardrobe
+      parameters:
+        - in: path
+          name: wardrobeId
+          schema:
+            type: string
+          required: true
+          description: ID of the wardrobe
+      responses:
+        '200':
+          description: Wardrobe details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wardrobe'
+    put:
+      tags:
+        - Wardrobe
+      summary: Update a Wardrobe
+      parameters:
+        - in: path
+          name: wardrobeId
+          schema:
+            type: string
+          required: true
+          description: ID of the wardrobe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardrobeInput'
+      responses:
+        '200':
+          description: Wardrobe updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wardrobe'
+    delete:
+      tags:
+        - Wardrobe
+      summary: Delete a Wardrobe
+      parameters:
+        - in: path
+          name: wardrobeId
+          schema:
+            type: string
+          required: true
+          description: ID of the wardrobe
+      responses:
+        '204':
+          description: Wardrobe deleted successfully
+
+  /wardrobes/{wardrobeId}/items:
+    post:
+      tags:
+        - Wardrobe
+      summary: Create an Item
+      parameters:
+        - in: path
+          name: wardrobeId
+          schema:
+            type: string
+          required: true
+          description: ID of the wardrobe to which the item belongs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemInput'
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    get:
+      tags:
+        - Wardrobe
+      summary: Get All Items in a Wardrobe
+      parameters:
+        - in: path
+          name: wardrobeId
+          schema:
+            type: string
+          required: true
+          description: ID of the wardrobe
+      responses:
+        '200':
+          description: List of all items in the wardrobe
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+  /items/{itemId}:
+    get:
+      tags:
+        - Item
+      summary: Get an Item
+      parameters:
+        - in: path
+          name: itemId
+          schema:
+            type: string
+          required: true
+          description: ID of the item
+      responses:
+        '200':
+          description: Item details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    put:
+      tags:
+        - Item
+      summary: Update an Item
+      parameters:
+        - in: path
+          name: itemId
+          schema:
+            type: string
+          required: true
+          description: ID of the item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemInput'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    delete:
+      tags:
+        - Item
+      summary: Delete an Item
+      parameters:
+        - in: path
+          name: itemId
+          schema:
+            type: string
+          required: true
+          description: ID of the item
+      responses:
+        '204':
+          description: Item deleted successfully
+
+components:
+  schemas:
+    Wardrobe:
+      type: object
+      properties:
+        wardrobeId:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+        color:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+    WardrobeInput:
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        color:
+          type: string
+    Item:
+      type: object
+      properties:
+        itemId:
+          type: string
+        wardrobeId:
+          type: string
+        size:
+          type: string
+        type:
+          type: string
+        material:
+          type: string
+        colors:
+          type: array
+          items:
+            type: string
+        image:
+          type: string
+        occasional:
+          type: boolean
+    ItemInput:
+      type: object
+      properties:
+        size:
+          type: string
+        type:
+          type: string
+        material:
+          type: string
+        colors:
+          type: array
+          items:
+            type: string
+        image:
+          type: string
+        occasional:
+          type: boolean
