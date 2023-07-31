@@ -1,0 +1,717 @@
+openapi: 3.0.0
+info:
+  description: An API to manage your wardrobe digitally
+  title: Wardrobe Management API
+  version: 1.0.0
+servers:
+- url: http://api.example.com/v1
+tags:
+- description: Endpoints related to user authentication.
+  name: Authentication
+- description: Endpoints for managing wardrobe items.
+  name: Items
+- description: Endpoints for managing outfits created from wardrobe items.
+  name: Outfits
+- description: Endpoints for managing user's wardrobes.
+  name: Wardrobes
+- description: Endpoints for managing user connections.
+  name: Connections
+paths:
+  /auth/login:
+    post:
+      description: Endpoint for user login and authentication.
+      operationId: auth_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_auth_login_post_request'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+      summary: Authenticate user
+      tags:
+      - Authentication
+      x-openapi-router-controller: openapi_server.controllers.authentication_controller
+  /connections/add:
+    post:
+      description: Create a connection between the current user and another user.
+      operationId: connections_add_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_connections_add_post_request'
+        required: true
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+      summary: Add a connection between users
+      tags:
+      - Connections
+      x-openapi-router-controller: openapi_server.controllers.connections_controller
+  /items:
+    get:
+      description: Get a list of all wardrobe items.
+      operationId: items_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Item'
+                type: array
+          description: Success
+        "401":
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+      summary: Get all items
+      tags:
+      - Items
+      x-openapi-router-controller: openapi_server.controllers.items_controller
+    post:
+      description: Create a new wardrobe item.
+      operationId: items_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+      summary: Add a new item
+      tags:
+      - Items
+      x-openapi-router-controller: openapi_server.controllers.items_controller
+  /items/{itemId}:
+    delete:
+      description: Delete a wardrobe item.
+      operationId: items_item_id_delete
+      parameters:
+      - explode: false
+        in: path
+        name: itemId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Item not found
+      security:
+      - bearerAuth: []
+      summary: Delete an item
+      tags:
+      - Items
+      x-openapi-router-controller: openapi_server.controllers.items_controller
+    get:
+      description: Get a specific wardrobe item by its ID.
+      operationId: items_item_id_get
+      parameters:
+      - explode: false
+        in: path
+        name: itemId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Item not found
+      security:
+      - bearerAuth: []
+      summary: Get an item by ID
+      tags:
+      - Items
+      x-openapi-router-controller: openapi_server.controllers.items_controller
+    put:
+      description: Update an existing wardrobe item.
+      operationId: items_item_id_put
+      parameters:
+      - explode: false
+        in: path
+        name: itemId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Item not found
+      security:
+      - bearerAuth: []
+      summary: Update an item
+      tags:
+      - Items
+      x-openapi-router-controller: openapi_server.controllers.items_controller
+  /outfits:
+    get:
+      description: Get a list of all created outfits.
+      operationId: outfits_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Outfit'
+                type: array
+          description: Success
+        "401":
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+      summary: Get all outfits
+      tags:
+      - Outfits
+      x-openapi-router-controller: openapi_server.controllers.outfits_controller
+    post:
+      description: Create a new outfit from wardrobe items.
+      operationId: outfits_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Outfit'
+        required: true
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+      summary: Add a new outfit
+      tags:
+      - Outfits
+      x-openapi-router-controller: openapi_server.controllers.outfits_controller
+  /outfits/{outfitId}:
+    delete:
+      description: Delete an existing outfit.
+      operationId: outfits_outfit_id_delete
+      parameters:
+      - explode: false
+        in: path
+        name: outfitId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Outfit not found
+      security:
+      - bearerAuth: []
+      summary: Delete an outfit
+      tags:
+      - Outfits
+      x-openapi-router-controller: openapi_server.controllers.outfits_controller
+    get:
+      description: Get a specific outfit by its ID.
+      operationId: outfits_outfit_id_get
+      parameters:
+      - explode: false
+        in: path
+        name: outfitId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Outfit'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Outfit not found
+      security:
+      - bearerAuth: []
+      summary: Get an outfit by ID
+      tags:
+      - Outfits
+      x-openapi-router-controller: openapi_server.controllers.outfits_controller
+    put:
+      description: Update an existing outfit.
+      operationId: outfits_outfit_id_put
+      parameters:
+      - explode: false
+        in: path
+        name: outfitId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Outfit'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Outfit not found
+      security:
+      - bearerAuth: []
+      summary: Update an outfit
+      tags:
+      - Outfits
+      x-openapi-router-controller: openapi_server.controllers.outfits_controller
+  /wardrobes:
+    get:
+      description: Get a list of all user's wardrobes.
+      operationId: wardrobes_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Wardrobe'
+                type: array
+          description: Success
+        "401":
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+      summary: Get all wardrobes
+      tags:
+      - Wardrobes
+      x-openapi-router-controller: openapi_server.controllers.wardrobes_controller
+    post:
+      description: Create a new wardrobe for the user.
+      operationId: wardrobes_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Wardrobe'
+        required: true
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+      security:
+      - bearerAuth: []
+      summary: Add a new wardrobe
+      tags:
+      - Wardrobes
+      x-openapi-router-controller: openapi_server.controllers.wardrobes_controller
+  /wardrobes/{wardrobeId}:
+    delete:
+      description: Delete an existing wardrobe.
+      operationId: wardrobes_wardrobe_id_delete
+      parameters:
+      - explode: false
+        in: path
+        name: wardrobeId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Wardrobe not found
+      security:
+      - bearerAuth: []
+      summary: Delete a wardrobe
+      tags:
+      - Wardrobes
+      x-openapi-router-controller: openapi_server.controllers.wardrobes_controller
+    get:
+      description: Get a specific wardrobe by its ID.
+      operationId: wardrobes_wardrobe_id_get
+      parameters:
+      - explode: false
+        in: path
+        name: wardrobeId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wardrobe'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Wardrobe not found
+      security:
+      - bearerAuth: []
+      summary: Get a wardrobe by ID
+      tags:
+      - Wardrobes
+      x-openapi-router-controller: openapi_server.controllers.wardrobes_controller
+    put:
+      description: Update an existing wardrobe.
+      operationId: wardrobes_wardrobe_id_put
+      parameters:
+      - explode: false
+        in: path
+        name: wardrobeId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Wardrobe'
+        required: true
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Wardrobe not found
+      security:
+      - bearerAuth: []
+      summary: Update a wardrobe
+      tags:
+      - Wardrobes
+      x-openapi-router-controller: openapi_server.controllers.wardrobes_controller
+components:
+  schemas:
+    Wardrobe:
+      example:
+        name: name
+        location: location
+        items:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        name:
+          title: name
+          type: string
+        location:
+          title: location
+          type: string
+        items:
+          items:
+            format: uuid
+            type: string
+          title: items
+          type: array
+      title: Wardrobe
+      type: object
+    User:
+      properties:
+        userId:
+          format: uuid
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+        emailId:
+          format: email
+          type: string
+        password:
+          type: string
+        connections:
+          description: A list of userIds
+          items:
+            format: uuid
+            type: string
+          type: array
+        wardrobes:
+          description: A list of wardrobeIds
+          items:
+            format: uuid
+            type: string
+          type: array
+      type: object
+    Item:
+      example:
+        occasion: null
+        image: image
+        size: size
+        material: material
+        name: name
+        season: null
+        time: null
+        category: null
+        colors:
+        - colors
+        - colors
+        tags:
+        - tags
+        - tags
+      properties:
+        name:
+          title: name
+          type: string
+        image:
+          title: image
+          type: string
+        category:
+          $ref: '#/components/schemas/Item_category'
+        size:
+          title: size
+          type: string
+        material:
+          title: material
+          type: string
+        time:
+          $ref: '#/components/schemas/Time'
+        season:
+          $ref: '#/components/schemas/Season'
+        occasion:
+          $ref: '#/components/schemas/Occasion'
+        tags:
+          items:
+            type: string
+          title: tags
+          type: array
+        colors:
+          items:
+            type: string
+          title: colors
+          type: array
+      title: Item
+      type: object
+    Topwear:
+      enum:
+      - T-Shirts
+      - Shirts
+      - Sweatshirts
+      - Jackets
+      - Blazers
+      - Kurtis
+      - Kurtas
+      - Tops
+      - Shrugs
+      title: Topwear
+      type: string
+    Bottomwear:
+      enum:
+      - Pyjamas
+      - Jeans
+      - Trousers
+      - Skirts
+      - Shorts
+      - Pants
+      - Plazzos
+      - Salwar
+      - Chudidaar
+      - Track Pants
+      title: Bottomwear
+      type: string
+    Footwear:
+      enum:
+      - Shoes
+      - Sandals
+      - Heels
+      - Flip Flops
+      - Ballerinas
+      - Boots
+      - Socks
+      title: Footwear
+      type: string
+    Accessory:
+      enum:
+      - Sunglasses
+      - Earrings
+      - Bracelets
+      - Necklaces
+      - Watches
+      - Bags
+      - Dupatta
+      - Caps
+      - Rings
+      - Anklets
+      title: Accessory
+      type: string
+    SinglePiece:
+      enum:
+      - Sarees
+      - Dresses
+      - Jump Suits
+      - Lehnga
+      - Underwears
+      - Under Shirts
+      - Tank Tops
+      - Bras
+      title: SinglePiece
+      type: string
+    Time:
+      enum:
+      - day
+      - night
+      title: Time
+      type: string
+    Season:
+      enum:
+      - summer
+      - winter
+      - spring
+      - monsoon
+      title: Season
+      type: string
+    Occasion:
+      enum:
+      - festive
+      - work
+      - party
+      - active
+      - casual
+      title: Occasion
+      type: string
+    Outfit:
+      example:
+        occasion: null
+        bottomwears:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        accessories:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        name: name
+        topwears:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        season: null
+        time: null
+        footwears:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        name:
+          title: name
+          type: string
+        time:
+          $ref: '#/components/schemas/Time'
+        season:
+          $ref: '#/components/schemas/Season'
+        occasion:
+          $ref: '#/components/schemas/Occasion'
+        topwears:
+          description: List of Topwear itemIds
+          items:
+            format: uuid
+            type: string
+          title: topwears
+          type: array
+        bottomwears:
+          description: List of Bottomwear itemIds
+          items:
+            format: uuid
+            type: string
+          title: bottomwears
+          type: array
+        accessories:
+          description: List of Accessory itemIds
+          items:
+            format: uuid
+            type: string
+          title: accessories
+          type: array
+        footwears:
+          description: List of Footwear itemIds
+          items:
+            format: uuid
+            type: string
+          title: footwears
+          type: array
+      title: Outfit
+      type: object
+    _auth_login_post_request:
+      properties:
+        emailId:
+          format: email
+          title: emailId
+          type: string
+        password:
+          title: password
+          type: string
+      title: _auth_login_post_request
+      type: object
+    _connections_add_post_request:
+      properties:
+        userId:
+          format: uuid
+          title: userId
+          type: string
+      title: _connections_add_post_request
+      type: object
+    Item_category:
+      oneOf:
+      - $ref: '#/components/schemas/Topwear'
+      - $ref: '#/components/schemas/Bottomwear'
+      - $ref: '#/components/schemas/Footwear'
+      - $ref: '#/components/schemas/Accessory'
+      - $ref: '#/components/schemas/SinglePiece'
+      title: Item_category
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: openapi_server.controllers.security_controller_.info_from_bearerAuth
