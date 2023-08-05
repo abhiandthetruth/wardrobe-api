@@ -4,7 +4,8 @@ from __future__ import annotations
 from datetime import date, datetime  # noqa: F401
 
 import re  # noqa: F401
-from typing import Any, Dict, List, Optional  # noqa: F401
+from typing import Any, Dict, List, Optional
+from uuid import uuid4  # noqa: F401
 
 from pydantic import AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
 from openapi_server.models.occasion import Occasion
@@ -29,6 +30,8 @@ class Outfit(BaseModel):
         footwears: The footwears of this Outfit [Optional].
     """
 
+    outfit_id: Optional[str] = Field(
+        alias="outfit_id", default_factory=uuid4, const=True)
     name: Optional[str] = Field(alias="name", default=None)
     time: Optional[Time] = Field(alias="time", default=None)
     season: Optional[Season] = Field(alias="season", default=None)
@@ -37,5 +40,6 @@ class Outfit(BaseModel):
     bottomwears: Optional[List[str]] = Field(alias="bottomwears", default=None)
     accessories: Optional[List[str]] = Field(alias="accessories", default=None)
     footwears: Optional[List[str]] = Field(alias="footwears", default=None)
+
 
 Outfit.update_forward_refs()
