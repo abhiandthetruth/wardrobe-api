@@ -22,8 +22,8 @@ class Wardrobe(BaseModel):
         items: The items of this Wardrobe [Optional].
     """
 
-    wardrobeId: Optional[str] = Field(
-        alias="wardrobeId", default_factory=uuid4, const=True)
+    wardrobe_id: Optional[str] = Field(
+        alias="wardrobe_id", default_factory=uuid4, const=True)
     name: Optional[str] = Field(alias="name", default=None)
     location: Optional[str] = Field(alias="location", default=None)
     items: Optional[List[str]] = Field(alias="items", default=None)

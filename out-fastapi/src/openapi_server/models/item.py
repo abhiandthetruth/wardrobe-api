@@ -32,7 +32,7 @@ class Item(BaseModel):
         tags: The tags of this Item [Optional].
         colors: The colors of this Item [Optional].
     """
-    itemId: UUID4 = Field(alias="itemId", const=True, default_factory=uuid.uuid4, include_in_schema=False)
+    item_Id: UUID4 = Field(alias="item_Id", const=True, default_factory=uuid.uuid4, include_in_schema=False)
     name: Optional[str] = Field(alias="name", default=None)
     image: Optional[str] = Field(alias="image", default=None)
     category: Optional[ItemCategory] = Field(alias="category", default=None)

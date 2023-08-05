@@ -48,7 +48,7 @@ async def items_get(
 
 
 @router.delete(
-    "/items/{itemId}",
+    "/items/{item_Id}",
     responses={
         204: {"description": "No Content"},
         401: {"description": "Unauthorized"},
@@ -61,22 +61,22 @@ async def items_get(
 async def items_item_id_delete(
     request: Request,
     response: Response,
-    itemId: str = Path(None, description=""),
+    item_Id: str = Path(None, description=""),
     # token_bearerAuth: TokenModel = Security(
     #     get_token_bearerAuth
     # ),
 ) -> None:
     """Delete a wardrobe item."""
-    delete_result = request.app.database["items"].delete_one({"itemId": itemId})
+    delete_result = request.app.database["items"].delete_one({"item_Id": item_Id})
 
     if delete_result.deleted_count == 1:
         response.status_code = status.HTTP_204_NO_CONTENT
         return response
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {itemId} not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_Id} not found")
 
 @router.get(
-    "/items/{itemId}",
+    "/items/{item_Id}",
     responses={
         200: {"model": Item, "description": "Success"},
         401: {"description": "Unauthorized"},
@@ -88,20 +88,20 @@ async def items_item_id_delete(
 )
 async def items_item_id_get(
     request: Request,
-    itemId: str = Path(None, description=""),
+    item_Id: str = Path(None, description=""),
     # token_bearerAuth: TokenModel = Security(
     #     get_token_bearerAuth
     # ),
 ) -> Item:
     """Get a specific wardrobe item by its ID."""
-    if (item := request.app.database["items"].find_one({"itemId": itemId}, {"_id": 0})) is not None:
+    if (item := request.app.database["items"].find_one({"item_Id": item_Id}, {"_id": 0})) is not None:
         return item
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {itemId} not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_Id} not found")
 
 
 @router.put(
-    "/items/{itemId}",
+    "/items/{item_Id}",
     responses={
         200: {"description": "Success"},
         401: {"description": "Unauthorized"},
@@ -113,7 +113,7 @@ async def items_item_id_get(
 )
 async def items_item_id_put(
     request: Request,
-    itemId: str = Path(None, description=""),
+    item_Id: str = Path(None, description=""),
     item: Item = Body(None, description=""),
     # token_bearerAuth: TokenModel = Security(
     #     get_token_bearerAuth
@@ -128,10 +128,10 @@ async def items_item_id_put(
         )
 
         if update_result.modified_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {itemId} not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_Id} not found")
 
     if (
-        existing_item := request.app.database["items"].find_one({"itemId": itemId}, {"_id": 0})
+        existing_item := request.app.database["items"].find_one({"item_Id": item_Id}, {"_id": 0})
     ) is not None:
         return existing_item
 

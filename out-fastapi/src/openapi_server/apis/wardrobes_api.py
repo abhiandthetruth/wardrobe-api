@@ -70,7 +70,7 @@ async def wardrobes_post(
 
 
 @router.delete(
-    "/wardrobes/{wardrobeId}",
+    "/wardrobes/{wardrobe_id}",
     responses={
         204: {"description": "No Content"},
         401: {"description": "Unauthorized"},
@@ -83,11 +83,11 @@ async def wardrobes_post(
 async def wardrobes_wardrobe_id_delete(
     request: Request,
     response: Response,
-    wardrobeId: str = Path(None, description="")
+    wardrobe_id: str = Path(None, description="")
 ) -> None:
     """Delete an existing wardrobe."""
     delete_result = request.app.database[COLLECTION].delete_one(
-        {"wardrobeId": wardrobeId})
+        {"wardrobe_id": wardrobe_id})
 
     if delete_result.deleted_count == 1:
         response.status_code = status.HTTP_204_NO_CONTENT
@@ -98,7 +98,7 @@ async def wardrobes_wardrobe_id_delete(
 
 
 @router.get(
-    "/wardrobes/{wardrobeId}",
+    "/wardrobes/{wardrobe_id}",
     responses={
         200: {"model": Wardrobe, "description": "Success"},
         401: {"description": "Unauthorized"},
@@ -110,18 +110,18 @@ async def wardrobes_wardrobe_id_delete(
 )
 async def wardrobes_wardrobe_id_get(
     request: Request,
-    wardrobeId: str = Path(None, description="")
+    wardrobe_id: str = Path(None, description="")
 ) -> Wardrobe:
     """Get a specific wardrobe by its ID."""
-    if (wardrobe := request.app.database[COLLECTION].find_one({"wardrobeId": wardrobeId}, {"_id": 0})) is not None:
+    if (wardrobe := request.app.database[COLLECTION].find_one({"wardrobe_id": wardrobe_id}, {"_id": 0})) is not None:
         return wardrobe
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"Wardrobe with ID {wardrobeId} not found")
+                        detail=f"Wardrobe with ID {wardrobe_id} not found")
 
 
 @router.put(
-    "/wardrobes/{wardrobeId}",
+    "/wardrobes/{wardrobe_id}",
     responses={
         200: {"description": "Success"},
         401: {"description": "Unauthorized"},
@@ -133,16 +133,16 @@ async def wardrobes_wardrobe_id_get(
 )
 async def wardrobes_wardrobe_id_put(
     request: Request,
-    wardrobeId: str = Path(None, description=""),
+    wardrobe_id: str = Path(None, description=""),
     wardrobe: Wardrobe = Body(None, description="")
 ) -> None:
     """Update an existing wardrobe."""
     wardrobe = {k: v for k, v in wardrobe.dict().items() if v is not None}
-    wardrobe["wardrobeId"] = wardrobeId
+    wardrobe["wardrobe_id"] = wardrobe_id
 
     if len(wardrobe) >= 1:
         update_result = request.app.database[COLLECTION].update_one(
-            {"wardrobeId": wardrobeId}, {"$set": wardrobe}
+            {"wardrobe_id": wardrobe_id}, {"$set": wardrobe}
         )
 
         if update_result.modified_count == 0:
@@ -150,7 +150,7 @@ async def wardrobes_wardrobe_id_put(
                                 detail=f"Wardrobe with ID {id} not found")
 
     if (
-        existing_wardrobe := request.app.database[COLLECTION].find_one({"wardrobeId": wardrobeId}, {"_id": 0})
+        existing_wardrobe := request.app.database[COLLECTION].find_one({"wardrobe_id": wardrobe_id}, {"_id": 0})
     ) is not None:
         return existing_wardrobe
 
