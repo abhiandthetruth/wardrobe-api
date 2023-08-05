@@ -17,12 +17,25 @@ from openapi_server.apis.connections_api import router as ConnectionsApiRouter
 from openapi_server.apis.items_api import router as ItemsApiRouter
 from openapi_server.apis.outfits_api import router as OutfitsApiRouter
 from openapi_server.apis.wardrobes_api import router as WardrobesApiRouter
+from dotenv import dotenv_values
+from pymongo import MongoClient
 
 app = FastAPI(
     title="Wardrobe Management API",
     description="An API to manage your wardrobe digitally",
     version="1.0.0",
 )
+
+config = dotenv_values(".env")
+
+@app.on_event("startup")
+def startup_db_client():
+    app.mongodb_client = MongoClient(config["ATLAS_URI"])
+    app.database = app.mongodb_client[config["DB_NAME"]]
+
+@app.on_event("shutdown")
+def shutdown_db_client():
+    app.mongodb_client.close()
 
 app.include_router(AuthenticationApiRouter)
 app.include_router(ConnectionsApiRouter)
