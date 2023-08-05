@@ -4,7 +4,8 @@ from __future__ import annotations
 from datetime import date, datetime  # noqa: F401
 
 import re  # noqa: F401
-from typing import Any, Dict, List, Optional  # noqa: F401
+from typing import Any, Dict, List, Optional
+from uuid import uuid4  # noqa: F401
 
 from pydantic import AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
 
@@ -21,8 +22,11 @@ class Wardrobe(BaseModel):
         items: The items of this Wardrobe [Optional].
     """
 
+    wardrobeId: Optional[str] = Field(
+        alias="wardrobeId", default_factory=uuid4, const=True)
     name: Optional[str] = Field(alias="name", default=None)
     location: Optional[str] = Field(alias="location", default=None)
     items: Optional[List[str]] = Field(alias="items", default=None)
+
 
 Wardrobe.update_forward_refs()
