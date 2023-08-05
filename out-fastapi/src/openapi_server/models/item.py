@@ -5,10 +5,14 @@ from datetime import date, datetime  # noqa: F401
 
 import re  # noqa: F401
 import uuid
-from typing import Any, Dict, List, Optional  # noqa: F401
+from typing import Any, Dict, List, Optional, Union  # noqa: F401
 
 from pydantic import AnyUrl, BaseModel, EmailStr, Field, validator, UUID4  # noqa: F401
-from openapi_server.models.item_category import ItemCategory
+from openapi_server.models.accessory import Accessory
+from openapi_server.models.bottomwear import Bottomwear
+from openapi_server.models.footwear import Footwear
+from openapi_server.models.single_piece import SinglePiece
+from openapi_server.models.topwear import Topwear
 from openapi_server.models.occasion import Occasion
 from openapi_server.models.season import Season
 from openapi_server.models.time import Time
@@ -33,9 +37,9 @@ class Item(BaseModel):
         colors: The colors of this Item [Optional].
     """
     item_Id: UUID4 = Field(alias="item_Id", const=True, default_factory=uuid.uuid4, include_in_schema=False)
-    name: Optional[str] = Field(alias="name", default=None)
+    name: Optional[str] = Field(alias="name", default=None, min_length=3)
     image: Optional[str] = Field(alias="image", default=None)
-    category: Optional[ItemCategory] = Field(alias="category", default=None)
+    category: Union[Accessory, Bottomwear, Footwear, Topwear, SinglePiece] = Field(alias="category", default=None)
     size: Optional[str] = Field(alias="size", default=None)
     material: Optional[str] = Field(alias="material", default=None)
     time: Optional[Time] = Field(alias="time", default=None)
