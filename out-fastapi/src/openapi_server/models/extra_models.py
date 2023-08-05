@@ -1,8 +1,7 @@
 # coding: utf-8
 
-from pydantic import BaseModel
+from pydantic import UUID4, BaseModel
 
 class TokenModel(BaseModel):
     """Defines a token model."""
-
-    sub: str
+    user_id: UUID4
