@@ -31,6 +31,6 @@ def get_token_bearerAuth(credentials: HTTPAuthorizationCredentials = Depends(bea
     :return: Decoded token information or None if token is invalid
     :rtype: TokenModel | None
     """
-
+    return ""
     ...
 
