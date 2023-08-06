@@ -20,7 +20,7 @@ class AuthLoginPostRequest(BaseModel):
         password: The password of this AuthLoginPostRequest [Optional].
     """
 
-    email_id: Optional[EmailStr] = Field(alias="emailId", default=None)
+    email_id: Optional[EmailStr] = Field(alias="email_id", default=None)
     password: Optional[str] = Field(alias="password", default=None)
 
 AuthLoginPostRequest.update_forward_refs()

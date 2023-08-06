@@ -19,6 +19,6 @@ class ConnectionsAddPostRequest(BaseModel):
         user_id: The user_id of this ConnectionsAddPostRequest [Optional].
     """
 
-    user_id: Optional[str] = Field(alias="userId", default=None)
+    user_id: Optional[str] = Field(alias="user_id", default=None)
 
 ConnectionsAddPostRequest.update_forward_refs()

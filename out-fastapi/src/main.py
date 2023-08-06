@@ -19,6 +19,7 @@ from openapi_server.apis.outfits_api import router as OutfitsApiRouter
 from openapi_server.apis.wardrobes_api import router as WardrobesApiRouter
 from dotenv import dotenv_values
 from pymongo import MongoClient
+from openapi_server.security_api import get_current_user
 
 app = FastAPI(
     title="Wardrobe Management API",
@@ -37,6 +38,7 @@ def startup_db_client():
 def shutdown_db_client():
     app.mongodb_client.close()
 
+app.add_middleware(get_current_user)
 app.include_router(AuthenticationApiRouter)
 app.include_router(ConnectionsApiRouter)
 app.include_router(ItemsApiRouter)

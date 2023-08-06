@@ -18,7 +18,6 @@ from fastapi import (  # noqa: F401
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.connections_add_post_request import ConnectionsAddPostRequest
-from openapi_server.security_api import get_token_bearerAuth
 
 router = APIRouter()
 
@@ -35,9 +34,6 @@ router = APIRouter()
 )
 async def connections_add_post(
     connections_add_post_request: ConnectionsAddPostRequest = Body(None, description=""),
-    token_bearerAuth: TokenModel = Security(
-        get_token_bearerAuth
-    ),
 ) -> None:
     """Create a connection between the current user and another user."""
     ...

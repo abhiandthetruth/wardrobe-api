@@ -21,7 +21,6 @@ from fastapi.encoders import jsonable_encoder
 from pymongo import database
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.item import Item
-from openapi_server.security_api import get_token_bearerAuth
 
 router = APIRouter()
 
@@ -38,9 +37,6 @@ router = APIRouter()
 )
 async def items_get(
     request: Request,
-    # token_bearerAuth: TokenModel = Security(
-    #     get_token_bearerAuth
-    # ),
 ) -> List[Item]:
     """Get a list of all wardrobe items."""
     items: List[Item] = list(request.app.database["items"].find({}, {"_id": 0}, limit=100))
@@ -62,9 +58,6 @@ async def items_item_id_delete(
     request: Request,
     response: Response,
     item_Id: str = Path(None, description=""),
-    # token_bearerAuth: TokenModel = Security(
-    #     get_token_bearerAuth
-    # ),
 ) -> None:
     """Delete a wardrobe item."""
     delete_result = request.app.database["items"].delete_one({"item_Id": item_Id})
@@ -89,9 +82,6 @@ async def items_item_id_delete(
 async def items_item_id_get(
     request: Request,
     item_Id: str = Path(None, description=""),
-    # token_bearerAuth: TokenModel = Security(
-    #     get_token_bearerAuth
-    # ),
 ) -> Item:
     """Get a specific wardrobe item by its ID."""
     if (item := request.app.database["items"].find_one({"item_Id": item_Id}, {"_id": 0})) is not None:
@@ -115,9 +105,6 @@ async def items_item_id_put(
     request: Request,
     item_Id: str = Path(None, description=""),
     item: Item = Body(None, description=""),
-    # token_bearerAuth: TokenModel = Security(
-    #     get_token_bearerAuth
-    # ),
 ) -> None:
     """Update an existing wardrobe item."""
     item = {k: v for k, v in item.dict().items() if v is not None}
@@ -151,9 +138,6 @@ async def items_item_id_put(
 async def items_post(
     request: Request,
     item: Item = Body(None, description=""),
-    # token_bearerAuth: TokenModel = Security(
-    #     get_token_bearerAuth
-    # ),
 ) -> None:
     """Create a new wardrobe item."""
     item = jsonable_encoder(item)

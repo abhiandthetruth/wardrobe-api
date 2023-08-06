@@ -21,7 +21,6 @@ from fastapi.encoders import jsonable_encoder
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.wardrobe import Wardrobe
-from openapi_server.security_api import get_token_bearerAuth
 
 router = APIRouter()
 COLLECTION = "wardrobes"
@@ -41,7 +40,7 @@ async def wardrobes_get(
     request: Request
 ) -> List[Wardrobe]:
     """Get a list of all user&#39;s wardrobes."""
-    # TODO: filter by userId fetched from token
+    # TODO: filter by user_id fetched from token
     wardrobes = list(request.app.database[COLLECTION].find(
         {}, {"_id": 0}, limit=5))
     return wardrobes

@@ -4,9 +4,10 @@ from __future__ import annotations
 from datetime import date, datetime  # noqa: F401
 
 import re  # noqa: F401
-from typing import Any, Dict, List, Optional  # noqa: F401
+from typing import Any, Dict, List, Optional
+import uuid  # noqa: F401
 
-from pydantic import AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
+from pydantic import UUID4, AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
 
 
 class User(BaseModel):
@@ -25,10 +26,10 @@ class User(BaseModel):
         wardrobes: The wardrobes of this User [Optional].
     """
 
-    user_id: Optional[str] = Field(alias="userId", default=None)
+    user_id: UUID4 = Field(alias="user_id", const=True, default_factory=uuid.uuid4)
     name: Optional[str] = Field(alias="name", default=None)
     image: Optional[str] = Field(alias="image", default=None)
-    email_id: Optional[EmailStr] = Field(alias="emailId", default=None)
+    email_id: Optional[EmailStr] = Field(alias="email_id", default=None)
     password: Optional[str] = Field(alias="password", default=None)
     connections: Optional[List[str]] = Field(alias="connections", default=None)
     wardrobes: Optional[List[str]] = Field(alias="wardrobes", default=None)

@@ -36,7 +36,7 @@ class Item(BaseModel):
         tags: The tags of this Item [Optional].
         colors: The colors of this Item [Optional].
     """
-    item_Id: UUID4 = Field(alias="item_Id", const=True, default_factory=uuid.uuid4, include_in_schema=False)
+    item_Id: UUID4 = Field(alias="item_Id", const=True, default_factory=uuid.uuid4)
     name: Optional[str] = Field(alias="name", default=None, min_length=3)
     image: Optional[str] = Field(alias="image", default=None)
     category: Union[Accessory, Bottomwear, Footwear, Topwear, SinglePiece] = Field(alias="category", default=None)
