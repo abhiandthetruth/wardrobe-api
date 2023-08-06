@@ -71,13 +71,13 @@ paths:
       summary: Add a new item
       tags:
       - Items
-  /items/{itemId}:
+  /items/{item_id}:
     delete:
       description: Delete a wardrobe item.
       parameters:
       - explode: false
         in: path
-        name: itemId
+        name: item_id
         required: true
         schema:
           format: uuid
@@ -100,7 +100,7 @@ paths:
       parameters:
       - explode: false
         in: path
-        name: itemId
+        name: item_id
         required: true
         schema:
           format: uuid
@@ -127,7 +127,7 @@ paths:
       parameters:
       - explode: false
         in: path
-        name: itemId
+        name: item_id
         required: true
         schema:
           format: uuid
@@ -305,13 +305,13 @@ paths:
       summary: Add a new wardrobe
       tags:
       - Wardrobes
-  /wardrobes/{wardrobeId}:
+  /wardrobes/{wardrobe_id}:
     delete:
       description: Delete an existing wardrobe.
       parameters:
       - explode: false
         in: path
-        name: wardrobeId
+        name: wardrobe_id
         required: true
         schema:
           format: uuid
@@ -334,7 +334,7 @@ paths:
       parameters:
       - explode: false
         in: path
-        name: wardrobeId
+        name: wardrobe_id
         required: true
         schema:
           format: uuid
@@ -361,7 +361,7 @@ paths:
       parameters:
       - explode: false
         in: path
-        name: wardrobeId
+        name: wardrobe_id
         required: true
         schema:
           format: uuid
@@ -430,26 +430,26 @@ components:
       type: object
     User:
       properties:
-        userId:
+        user_id:
           format: uuid
           type: string
         name:
           type: string
         image:
           type: string
-        emailId:
+        email_id:
           format: email
           type: string
         password:
           type: string
         connections:
-          description: A list of userIds
+          description: A list of user_ids
           items:
             format: uuid
             type: string
           type: array
         wardrobes:
-          description: A list of wardrobeIds
+          description: A list of wardrobe_ids
           items:
             format: uuid
             type: string
@@ -620,28 +620,28 @@ components:
         occasion:
           $ref: '#/components/schemas/Occasion'
         topwears:
-          description: List of Topwear itemIds
+          description: List of Topwear item_ids
           items:
             format: uuid
             type: string
           title: topwears
           type: array
         bottomwears:
-          description: List of Bottomwear itemIds
+          description: List of Bottomwear item_ids
           items:
             format: uuid
             type: string
           title: bottomwears
           type: array
         accessories:
-          description: List of Accessory itemIds
+          description: List of Accessory item_ids
           items:
             format: uuid
             type: string
           title: accessories
           type: array
         footwears:
-          description: List of Footwear itemIds
+          description: List of Footwear item_ids
           items:
             format: uuid
             type: string
@@ -651,9 +651,9 @@ components:
       type: object
     _auth_login_post_request:
       properties:
-        emailId:
+        email_id:
           format: email
-          title: emailId
+          title: email_id
           type: string
         password:
           title: password
@@ -662,9 +662,9 @@ components:
       type: object
     _connections_add_post_request:
       properties:
-        userId:
+        user_id:
           format: uuid
-          title: userId
+          title: user_id
           type: string
       title: _connections_add_post_request
       type: object

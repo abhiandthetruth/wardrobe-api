@@ -57,7 +57,7 @@ def test_wardrobes_wardrobe_id_delete(client: TestClient):
     }
     response = client.request(
         "DELETE",
-        "/wardrobes/{wardrobeId}".format(wardrobeId='wardrobe_id_example'),
+        "/wardrobes/{wardrobe_id}".format(wardrobe_id='wardrobe_id_example'),
         headers=headers,
     )
 
@@ -76,7 +76,7 @@ def test_wardrobes_wardrobe_id_get(client: TestClient):
     }
     response = client.request(
         "GET",
-        "/wardrobes/{wardrobeId}".format(wardrobeId='wardrobe_id_example'),
+        "/wardrobes/{wardrobe_id}".format(wardrobe_id='wardrobe_id_example'),
         headers=headers,
     )
 
@@ -96,7 +96,7 @@ def test_wardrobes_wardrobe_id_put(client: TestClient):
     }
     response = client.request(
         "PUT",
-        "/wardrobes/{wardrobeId}".format(wardrobeId='wardrobe_id_example'),
+        "/wardrobes/{wardrobe_id}".format(wardrobe_id='wardrobe_id_example'),
         headers=headers,
         json=wardrobe,
     )

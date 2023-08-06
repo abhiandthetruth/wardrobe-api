@@ -36,7 +36,7 @@ def test_items_item_id_delete(client: TestClient):
     }
     response = client.request(
         "DELETE",
-        "/items/{itemId}".format(itemId='item_id_example'),
+        "/items/{item_id}".format(item_id='item_id_example'),
         headers=headers,
     )
 
@@ -55,7 +55,7 @@ def test_items_item_id_get(client: TestClient):
     }
     response = client.request(
         "GET",
-        "/items/{itemId}".format(itemId='item_id_example'),
+        "/items/{item_id}".format(item_id='item_id_example'),
         headers=headers,
     )
 
@@ -75,7 +75,7 @@ def test_items_item_id_put(client: TestClient):
     }
     response = client.request(
         "PUT",
-        "/items/{itemId}".format(itemId='item_id_example'),
+        "/items/{item_id}".format(item_id='item_id_example'),
         headers=headers,
         json=item,
     )
