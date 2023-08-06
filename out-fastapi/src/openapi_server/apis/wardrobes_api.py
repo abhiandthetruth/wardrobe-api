@@ -146,7 +146,7 @@ async def wardrobes_wardrobe_id_put(
 
         if update_result.modified_count == 0:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"Wardrobe with ID {id} not found")
+                                detail=f"Wardrobe with ID {wardrobe_id} not found")
 
     if (
         existing_wardrobe := request.app.database[COLLECTION].find_one({"wardrobe_id": wardrobe_id}, {"_id": 0})
@@ -154,4 +154,4 @@ async def wardrobes_wardrobe_id_put(
         return existing_wardrobe
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"Wardrobe with ID {id} not found")
+                        detail=f"Wardrobe with ID {wardrobe_id} not found")
