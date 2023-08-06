@@ -44,7 +44,7 @@ async def items_get(
 
 
 @router.delete(
-    "/items/{item_Id}",
+    "/items/{item_id}",
     responses={
         204: {"description": "No Content"},
         401: {"description": "Unauthorized"},
@@ -57,19 +57,19 @@ async def items_get(
 async def items_item_id_delete(
     request: Request,
     response: Response,
-    item_Id: str = Path(None, description=""),
+    item_id: str = Path(None, description=""),
 ) -> None:
     """Delete a wardrobe item."""
-    delete_result = request.app.database["items"].delete_one({"item_Id": item_Id})
+    delete_result = request.app.database["items"].delete_one({"item_id": item_id})
 
     if delete_result.deleted_count == 1:
         response.status_code = status.HTTP_204_NO_CONTENT
         return response
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_Id} not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_id} not found")
 
 @router.get(
-    "/items/{item_Id}",
+    "/items/{item_id}",
     responses={
         200: {"model": Item, "description": "Success"},
         401: {"description": "Unauthorized"},
@@ -81,17 +81,17 @@ async def items_item_id_delete(
 )
 async def items_item_id_get(
     request: Request,
-    item_Id: str = Path(None, description=""),
+    item_id: str = Path(None, description=""),
 ) -> Item:
     """Get a specific wardrobe item by its ID."""
-    if (item := request.app.database["items"].find_one({"item_Id": item_Id}, {"_id": 0})) is not None:
+    if (item := request.app.database["items"].find_one({"item_id": item_id}, {"_id": 0})) is not None:
         return item
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_Id} not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_id} not found")
 
 
 @router.put(
-    "/items/{item_Id}",
+    "/items/{item_id}",
     responses={
         200: {"description": "Success"},
         401: {"description": "Unauthorized"},
@@ -103,7 +103,7 @@ async def items_item_id_get(
 )
 async def items_item_id_put(
     request: Request,
-    item_Id: str = Path(None, description=""),
+    item_id: str = Path(None, description=""),
     item: Item = Body(None, description=""),
 ) -> None:
     """Update an existing wardrobe item."""
@@ -115,10 +115,10 @@ async def items_item_id_put(
         )
 
         if update_result.modified_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_Id} not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_id} not found")
 
     if (
-        existing_item := request.app.database["items"].find_one({"item_Id": item_Id}, {"_id": 0})
+        existing_item := request.app.database["items"].find_one({"item_id": item_id}, {"_id": 0})
     ) is not None:
         return existing_item
 

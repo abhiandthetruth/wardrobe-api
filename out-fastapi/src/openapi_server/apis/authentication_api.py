@@ -23,10 +23,11 @@ from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.auth_login_post_request import AuthLoginPostRequest
 from openapi_server.models.auth_register_post_request import AuthRegisterPostRequest
 from openapi_server.models.user import User
-from openapi_server.security_api import SECRET_KEY, ALGORITHM
+from dotenv import dotenv_values
 
 router = APIRouter()
 
+config = dotenv_values('.env')
 
 @router.post(
     "/auth/login",
@@ -46,7 +47,7 @@ async def auth_login_post(
     """Endpoint for user login and authentication."""
     email_id = auth_login_post_request.email_id
     if (user := request.app.database["users"].find_one({"email_id": email_id}, {"_id": 0})) is not None:
-        encoded_jwt = jwt.encode({"user_id": user["user_id"]}, SECRET_KEY, algorithm=ALGORITHM)
+        encoded_jwt = jwt.encode({"user_id": user["user_id"]}, config["SECRET_KEY"], algorithm=config["ALGORITHM"])
         response.headers["X-Auth-Token"] = "Bearer " + encoded_jwt
         response.status_code = 204
         return response
