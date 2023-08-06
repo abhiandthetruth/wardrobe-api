@@ -22,9 +22,5 @@ class SinglePiece(str, Enum):
     DRESSES = "Dresses"
     JUMP_SUITS = "Jump Suits"
     LEHNGA = "Lehnga"
-    UNDERWEARS = "Underwears"
-    UNDER_SHIRTS = "Under Shirts"
-    TANK_TOPS = "Tank Tops"
-    BRAS = "Bras"
 
 

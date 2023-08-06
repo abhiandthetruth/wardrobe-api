@@ -21,6 +21,7 @@ from fastapi.encoders import jsonable_encoder
 from pymongo import database
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.item import Item
+from openapi_server.security_api import get_token_bearerAuth
 
 router = APIRouter()
 
@@ -37,6 +38,7 @@ router = APIRouter()
 )
 async def items_get(
     request: Request,
+    Token: TokenModel = Depends(get_token_bearerAuth)
 ) -> List[Item]:
     """Get a list of all wardrobe items."""
     items: List[Item] = list(request.app.database["items"].find({}, {"_id": 0}, limit=100))

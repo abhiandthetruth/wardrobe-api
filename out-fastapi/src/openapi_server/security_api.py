@@ -15,12 +15,14 @@ from fastapi.security import (  # noqa: F401
     SecurityScopes,
 )
 from fastapi.security.api_key import APIKeyCookie, APIKeyHeader, APIKeyQuery  # noqa: F401
-
+from jose import jwt
 from openapi_server.models.extra_models import TokenModel
-
+from dotenv import dotenv_values
 
 bearer_auth = HTTPBearer()
-
+config = dotenv_values('.env')
+SECRET_KEY = config["SECRET_KEY"]
+ALGORITHM = config["ALGORITHM"]
 
 def get_token_bearerAuth(credentials: HTTPAuthorizationCredentials = Depends(bearer_auth)) -> TokenModel:
     """
@@ -31,5 +33,9 @@ def get_token_bearerAuth(credentials: HTTPAuthorizationCredentials = Depends(bea
     :return: Decoded token information or None if token is invalid
     :rtype: TokenModel | None
     """
-    return ""
-    ...
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        tokenModel = TokenModel(**payload)
+        return tokenModel
+    except Exception as e:
+        return

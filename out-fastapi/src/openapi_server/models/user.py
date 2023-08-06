@@ -27,11 +27,10 @@ class User(BaseModel):
     """
 
     user_id: UUID4 = Field(alias="user_id", const=True, default_factory=uuid.uuid4)
-    name: Optional[str] = Field(alias="name", default=None)
+    name: str = Field(alias="name", default=None)
     image: Optional[str] = Field(alias="image", default=None)
-    email_id: Optional[EmailStr] = Field(alias="email_id", default=None)
-    password: Optional[str] = Field(alias="password", default=None)
-    connections: Optional[List[str]] = Field(alias="connections", default=None)
-    wardrobes: Optional[List[str]] = Field(alias="wardrobes", default=None)
+    email_id: EmailStr = Field(alias="email_id", default=None)
+    password: str = Field(alias="password", default=None)
+    connections: Optional[List[UUID4]] = Field(alias="connections", default=None)
 
 User.update_forward_refs()

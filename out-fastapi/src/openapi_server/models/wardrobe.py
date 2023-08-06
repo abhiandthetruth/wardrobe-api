@@ -7,7 +7,7 @@ import re  # noqa: F401
 from typing import Any, Dict, List, Optional
 from uuid import uuid4  # noqa: F401
 
-from pydantic import AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
+from pydantic import UUID4, AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
 
 
 class Wardrobe(BaseModel):
@@ -22,11 +22,11 @@ class Wardrobe(BaseModel):
         items: The items of this Wardrobe [Optional].
     """
 
-    wardrobe_id: Optional[str] = Field(
+    wardrobe_id: UUID4 = Field(
         alias="wardrobe_id", default_factory=uuid4, const=True)
-    name: Optional[str] = Field(alias="name", default=None)
-    location: Optional[str] = Field(alias="location", default=None)
-    items: Optional[List[str]] = Field(alias="items", default=None)
+    name: str = Field(alias="name", default=None)
+    location: str = Field(alias="location", default=None)
+    user_id: UUID4 = Field(alias="user")
 
 
 Wardrobe.update_forward_refs()
