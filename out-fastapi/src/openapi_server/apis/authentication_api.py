@@ -23,9 +23,15 @@ from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.auth_login_post_request import AuthLoginPostRequest
 from openapi_server.models.auth_register_post_request import AuthRegisterPostRequest
 from openapi_server.models.user import User
-from openapi_server.security_api import SECRET_KEY, ALGORITHM
+from openapi_server.security_api import (
+    SECRET_KEY,
+    ALGORITHM,
+    get_encoded_token,
+    get_password_hash,
+)
 
 router = APIRouter()
+
 
 @router.post(
     "/auth/login",
@@ -44,14 +50,25 @@ async def auth_login_post(
 ) -> None:
     """Endpoint for user login and authentication."""
     email_id = auth_login_post_request.email_id
-    if (user := request.app.database["users"].find_one({"email_id": email_id}, {"_id": 0})) is not None:
-        encoded_jwt = jwt.encode({"user_id": user["user_id"]}, SECRET_KEY, ALGORITHM)
-        response.headers["X-Auth-Token"] = "Bearer " + encoded_jwt
+    user: User
+    if (
+        user := request.app.database["users"].find_one(
+            {
+                "email_id": email_id,
+                "password": get_password_hash(auth_login_post_request.password),
+            },
+            {"_id": 0},
+        )
+    ) is not None:
+        response.headers["X-Auth-Token"] = get_encoded_token({"user_id": user.user_id})
         response.status_code = 204
         return response
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {email_id} not found")
-    
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"User with ID {email_id} not found",
+    )
+
 
 @router.post(
     "/auth/register",
@@ -68,17 +85,20 @@ async def auth_register_post(
     auth_register_post_request: AuthRegisterPostRequest = Body(None, description=""),
 ) -> None:
     """Endpoint for user registration."""
+    name, email_id, password = (
+        auth_register_post_request.name,
+        auth_register_post_request.email_id,
+        auth_register_post_request.password,
+    )
     user = jsonable_encoder(
         User(
-            name=auth_register_post_request.name, 
-            email_id=auth_register_post_request.email_id, 
-            password=auth_register_post_request.password
+            name=name,
+            email_id=email_id,
+            password=get_password_hash(password),
         )
     )
     new_user = request.app.database["users"].insert_one(user)
     created_user = request.app.database["users"].find_one(
-        {"_id": new_user.inserted_id},
-        {'_id': 0, "password": 0}
+        {"_id": new_user.inserted_id}, {"_id": 0, "password": 0}
     )
-
     return created_user

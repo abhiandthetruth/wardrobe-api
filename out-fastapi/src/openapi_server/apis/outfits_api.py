@@ -37,11 +37,15 @@ COLLECTION = "outfits"
     summary="Get all outfits",
     response_model_by_alias=True,
 )
-async def outfits_get(request: Request) -> List[Outfit]:
+async def outfits_get(
+    request: Request, token: TokenModel = Depends(get_token_bearerAuth)
+) -> List[Outfit]:
     """Get a list of all created outfits."""
-    # TODO: filter by userId fetched from token
-    outfits = list(request.app.database[COLLECTION].find(
-        {}, {"_id": 0}, limit=5))
+    outfits = list(
+        request.app.database[COLLECTION].find(
+            {"user_id": token.user_id}, {"_id": 0}, limit=0
+        )
+    )
     return outfits
 
 
@@ -59,18 +63,21 @@ async def outfits_get(request: Request) -> List[Outfit]:
 async def outfits_outfit_id_delete(
     request: Request,
     response: Response,
-    outfit_id: str = Path(None, description="")
+    outfit_id: str = Path(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth),
 ) -> None:
     """Delete an existing outfit."""
     delete_result = request.app.database[COLLECTION].delete_one(
-        {"outfit_id": outfit_id})
+        {"outfit_id": outfit_id, "user_id": token.user_id}
+    )
 
     if delete_result.deleted_count == 1:
         response.status_code = status.HTTP_204_NO_CONTENT
         return response
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"Outfit with ID {id} not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"Outfit with ID {id} not found"
+    )
 
 
 @router.get(
@@ -86,14 +93,21 @@ async def outfits_outfit_id_delete(
 )
 async def outfits_outfit_id_get(
     request: Request,
-    outfit_id: str = Path(None, description="")
+    outfit_id: str = Path(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth),
 ) -> Outfit:
     """Get a specific outfit by its ID."""
-    if (outfit := request.app.database[COLLECTION].find_one({"outfit_id": outfit_id}, {"_id": 0})) is not None:
+    if (
+        outfit := request.app.database[COLLECTION].find_one(
+            {"outfit_id": outfit_id, "user_id": token.user_id}, {"_id": 0}
+        )
+    ) is not None:
         return outfit
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"Wardrobe with ID {outfit_id} not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Wardrobe with ID {outfit_id} not found",
+    )
 
 
 @router.put(
@@ -110,7 +124,8 @@ async def outfits_outfit_id_get(
 async def outfits_outfit_id_put(
     request: Request,
     outfit_id: str = Path(None, description=""),
-    outfit: Outfit = Body(None, description="")
+    outfit: Outfit = Body(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
     """Update an existing outfit."""
     outfit = {k: v for k, v in outfit.dict().items() if v is not None}
@@ -122,16 +137,22 @@ async def outfits_outfit_id_put(
         )
 
         if update_result.modified_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f"Outfit with ID {outfit_id} not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Outfit with ID {outfit_id} not found",
+            )
 
     if (
-        existing_outfit := request.app.database[COLLECTION].find_one({"outfit_id": outfit_id}, {"_id": 0})
+        existing_outfit := request.app.database[COLLECTION].find_one(
+            {"outfit_id": outfit_id, "user_id": token.user_id}, {"_id": 0}
+        )
     ) is not None:
         return existing_outfit
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail=f"Outfit with ID {outfit_id} not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Outfit with ID {outfit_id} not found",
+    )
 
 
 @router.post(
@@ -145,12 +166,12 @@ async def outfits_outfit_id_put(
     response_model_by_alias=True,
 )
 async def outfits_post(
-    request: Request,
-    outfit: Outfit = Body(None, description="")
+    request: Request, outfit: Outfit = Body(None, description=""), token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
     """Create a new outfit from wardrobe items."""
     outfit = jsonable_encoder(outfit)
+    outfit.user_id = token.user_id
     new_outfit = request.app.database[COLLECTION].insert_one(outfit)
-    return request.app.database[COLLECTION].find_one({
-        "_id": new_outfit.inserted_id
-    }, {"_id": 0})
+    return request.app.database[COLLECTION].find_one(
+        {"_id": new_outfit.inserted_id}, {"_id": 0}
+    )

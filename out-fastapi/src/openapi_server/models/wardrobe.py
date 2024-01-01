@@ -26,7 +26,7 @@ class Wardrobe(BaseModel):
         alias="wardrobe_id", default_factory=uuid4, const=True)
     name: str = Field(alias="name", default=None)
     location: str = Field(alias="location", default=None)
-    user_id: UUID4 = Field(alias="user")
+    user_id: Optional[UUID4] = Field(alias="user")
 
 
 Wardrobe.update_forward_refs()

@@ -37,11 +37,14 @@ router = APIRouter()
     response_model_by_alias=True,
 )
 async def items_get(
-    request: Request,
-    Token: TokenModel = Depends(get_token_bearerAuth)
+    request: Request, token: TokenModel = Depends(get_token_bearerAuth)
 ) -> List[Item]:
     """Get a list of all wardrobe items."""
-    items: List[Item] = list(request.app.database["items"].find({}, {"_id": 0}, limit=100))
+    items: List[Item] = list(
+        request.app.database["items"].find(
+            {"user_id": token.user_id}, {"_id": 0}, limit=0
+        )
+    )
     return items
 
 
@@ -60,15 +63,22 @@ async def items_item_id_delete(
     request: Request,
     response: Response,
     item_id: str = Path(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth),
 ) -> None:
     """Delete a wardrobe item."""
-    delete_result = request.app.database["items"].delete_one({"item_id": item_id})
+    delete_result = request.app.database["items"].delete_one(
+        {"item_id": item_id, "user_id": token.user_id}
+    )
 
     if delete_result.deleted_count == 1:
         response.status_code = status.HTTP_204_NO_CONTENT
         return response
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_id} not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Item with ID {item_id} not found",
+    )
+
 
 @router.get(
     "/items/{item_id}",
@@ -84,12 +94,20 @@ async def items_item_id_delete(
 async def items_item_id_get(
     request: Request,
     item_id: str = Path(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth),
 ) -> Item:
     """Get a specific wardrobe item by its ID."""
-    if (item := request.app.database["items"].find_one({"item_id": item_id}, {"_id": 0})) is not None:
+    if (
+        item := request.app.database["items"].find_one(
+            {"item_id": item_id, "user_id": token.user_id}, {"_id": 0}
+        )
+    ) is not None:
         return item
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_id} not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Item with ID {item_id} not found",
+    )
 
 
 @router.put(
@@ -107,24 +125,32 @@ async def items_item_id_put(
     request: Request,
     item_id: str = Path(None, description=""),
     item: Item = Body(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth),
 ) -> None:
     """Update an existing wardrobe item."""
     item = {k: v for k, v in item.dict().items() if v is not None}
 
     if len(item) >= 1:
         update_result = request.app.database["items"].update_one(
-            {"_id": id}, {"$set": item}
+            {"item_id": item_id, "user_id": token.user_id}, {"$set": item}
         )
 
         if update_result.modified_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {item_id} not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Item with ID {item_id} not found",
+            )
 
     if (
-        existing_item := request.app.database["items"].find_one({"item_id": item_id}, {"_id": 0})
+        existing_item := request.app.database["items"].find_one(
+            {"item_id": item_id, "user_id": token.user_id}, {"_id": 0}
+        )
     ) is not None:
         return existing_item
 
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {id} not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"Item with ID {id} not found"
+    )
 
 
 @router.post(
@@ -140,13 +166,14 @@ async def items_item_id_put(
 async def items_post(
     request: Request,
     item: Item = Body(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth),
 ) -> None:
     """Create a new wardrobe item."""
     item = jsonable_encoder(item)
+    item.user_id = token.user_id
     new_item = request.app.database["items"].insert_one(item)
     created_item = request.app.database["items"].find_one(
-        {"_id": new_item.inserted_id},
-        {'_id': 0}
+        {"item_id": new_item.inserted_id}, {"_id": 0}
     )
 
     return created_item

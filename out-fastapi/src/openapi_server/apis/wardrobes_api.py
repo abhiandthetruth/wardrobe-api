@@ -21,6 +21,7 @@ from fastapi.encoders import jsonable_encoder
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from openapi_server.models.wardrobe import Wardrobe
+from openapi_server.security_api import get_token_bearerAuth
 
 router = APIRouter()
 COLLECTION = "wardrobes"
@@ -37,12 +38,13 @@ COLLECTION = "wardrobes"
     response_model_by_alias=True,
 )
 async def wardrobes_get(
-    request: Request
+    request: Request,
+    token: TokenModel = Depends(get_token_bearerAuth)
 ) -> List[Wardrobe]:
     """Get a list of all user&#39;s wardrobes."""
     # TODO: filter by user_id fetched from token
     wardrobes = list(request.app.database[COLLECTION].find(
-        {}, {"_id": 0}, limit=5))
+        {"user_id", token.user_id}, {"_id": 0}, limit=5))
     return wardrobes
 
 
@@ -58,10 +60,12 @@ async def wardrobes_get(
 )
 async def wardrobes_post(
     request: Request,
-    wardrobe: Wardrobe = Body(None, description="")
+    wardrobe: Wardrobe = Body(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
     """Create a new wardrobe for the user."""
     wardrobe = jsonable_encoder(wardrobe)
+    wardrobe.user_id = token.user_id
     new_wardrobe = request.app.database[COLLECTION].insert_one(wardrobe)
     return request.app.database[COLLECTION].find_one({
         "_id": new_wardrobe.inserted_id
@@ -82,11 +86,12 @@ async def wardrobes_post(
 async def wardrobes_wardrobe_id_delete(
     request: Request,
     response: Response,
-    wardrobe_id: str = Path(None, description="")
+    wardrobe_id: str = Path(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
     """Delete an existing wardrobe."""
     delete_result = request.app.database[COLLECTION].delete_one(
-        {"wardrobe_id": wardrobe_id})
+        {"wardrobe_id": wardrobe_id, "user_id": token.user_id})
 
     if delete_result.deleted_count == 1:
         response.status_code = status.HTTP_204_NO_CONTENT
@@ -109,10 +114,11 @@ async def wardrobes_wardrobe_id_delete(
 )
 async def wardrobes_wardrobe_id_get(
     request: Request,
-    wardrobe_id: str = Path(None, description="")
+    wardrobe_id: str = Path(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth)
 ) -> Wardrobe:
     """Get a specific wardrobe by its ID."""
-    if (wardrobe := request.app.database[COLLECTION].find_one({"wardrobe_id": wardrobe_id}, {"_id": 0})) is not None:
+    if (wardrobe := request.app.database[COLLECTION].find_one({"wardrobe_id": wardrobe_id, "user_id": token.user_id}, {"_id": 0})) is not None:
         return wardrobe
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -133,7 +139,8 @@ async def wardrobes_wardrobe_id_get(
 async def wardrobes_wardrobe_id_put(
     request: Request,
     wardrobe_id: str = Path(None, description=""),
-    wardrobe: Wardrobe = Body(None, description="")
+    wardrobe: Wardrobe = Body(None, description=""),
+    token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
     """Update an existing wardrobe."""
     wardrobe = {k: v for k, v in wardrobe.dict().items() if v is not None}
@@ -149,7 +156,7 @@ async def wardrobes_wardrobe_id_put(
                                 detail=f"Wardrobe with ID {wardrobe_id} not found")
 
     if (
-        existing_wardrobe := request.app.database[COLLECTION].find_one({"wardrobe_id": wardrobe_id}, {"_id": 0})
+        existing_wardrobe := request.app.database[COLLECTION].find_one({"wardrobe_id": wardrobe_id, "user_id": token.user_id}, {"_id": 0})
     ) is not None:
         return existing_wardrobe
 
