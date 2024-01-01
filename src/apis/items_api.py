@@ -19,9 +19,9 @@ from fastapi import (  # noqa: F401
 )
 from fastapi.encoders import jsonable_encoder
 from pymongo import database
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.item import Item
-from openapi_server.security_api import get_token_bearerAuth
+from models.extra_models import TokenModel  # noqa: F401
+from models.item import Item
+from security_api import get_token_bearerAuth
 
 router = APIRouter()
 
@@ -62,7 +62,7 @@ async def items_get(
 async def items_item_id_delete(
     request: Request,
     response: Response,
-    item_id: str = Path(None, description=""),
+    item_id: str = Path(description=""),
     token: TokenModel = Depends(get_token_bearerAuth),
 ) -> None:
     """Delete a wardrobe item."""
@@ -93,7 +93,7 @@ async def items_item_id_delete(
 )
 async def items_item_id_get(
     request: Request,
-    item_id: str = Path(None, description=""),
+    item_id: str = Path(description=""),
     token: TokenModel = Depends(get_token_bearerAuth),
 ) -> Item:
     """Get a specific wardrobe item by its ID."""
@@ -123,7 +123,7 @@ async def items_item_id_get(
 )
 async def items_item_id_put(
     request: Request,
-    item_id: str = Path(None, description=""),
+    item_id: str = Path(description=""),
     item: Item = Body(None, description=""),
     token: TokenModel = Depends(get_token_bearerAuth),
 ) -> None:

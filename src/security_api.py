@@ -18,7 +18,7 @@ from fastapi.security import (  # noqa: F401
 from fastapi.security.api_key import APIKeyCookie, APIKeyHeader, APIKeyQuery  # noqa: F401
 from jose import jwt
 from passlib.context import CryptContext
-from openapi_server.models.extra_models import TokenModel
+from models.extra_models import TokenModel
 from dotenv import dotenv_values
 
 bearer_auth = HTTPBearer()

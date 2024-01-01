@@ -3,7 +3,7 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.outfit import Outfit  # noqa: F401
+from models.outfit import Outfit  # noqa: F401
 
 
 def test_outfits_get(client: TestClient):

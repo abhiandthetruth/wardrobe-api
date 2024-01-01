@@ -19,13 +19,11 @@ from fastapi import (  # noqa: F401
 )
 from fastapi.encoders import jsonable_encoder
 from jose import jwt
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.auth_login_post_request import AuthLoginPostRequest
-from openapi_server.models.auth_register_post_request import AuthRegisterPostRequest
-from openapi_server.models.user import User
-from openapi_server.security_api import (
-    SECRET_KEY,
-    ALGORITHM,
+from models.extra_models import TokenModel  # noqa: F401
+from models.auth_login_post_request import AuthLoginPostRequest
+from models.auth_register_post_request import AuthRegisterPostRequest
+from models.user import User
+from security_api import (
     get_encoded_token,
     get_password_hash,
 )

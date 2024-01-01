@@ -12,11 +12,11 @@
 
 from fastapi import FastAPI
 
-from openapi_server.apis.authentication_api import router as AuthenticationApiRouter
-from openapi_server.apis.connections_api import router as ConnectionsApiRouter
-from openapi_server.apis.items_api import router as ItemsApiRouter
-from openapi_server.apis.outfits_api import router as OutfitsApiRouter
-from openapi_server.apis.wardrobes_api import router as WardrobesApiRouter
+from apis.authentication_api import router as AuthenticationApiRouter
+from apis.connections_api import router as ConnectionsApiRouter
+from apis.items_api import router as ItemsApiRouter
+from apis.outfits_api import router as OutfitsApiRouter
+from apis.wardrobes_api import router as WardrobesApiRouter
 from dotenv import dotenv_values
 from pymongo import MongoClient
 
