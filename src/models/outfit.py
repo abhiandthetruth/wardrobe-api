@@ -8,9 +8,9 @@ from typing import Any, Dict, List, Optional
 from uuid import uuid4  # noqa: F401
 
 from pydantic import UUID4, AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
-from openapi_server.models.occasion import Occasion
-from openapi_server.models.season import Season
-from openapi_server.models.time import Time
+from models.occasion import Occasion
+from models.season import Season
+from models.time import Time
 
 
 class Outfit(BaseModel):
@@ -31,7 +31,7 @@ class Outfit(BaseModel):
     """
 
     outfit_id: Optional[str] = Field(
-        alias="outfit_id", default_factory=uuid4, const=True)
+        alias="outfit_id", default_factory=uuid4, Literal=True)
     user_id: Optional[UUID4] = Field(alias="user Id")
     name: str = Field(alias="name", default=None)
     time: Optional[Time] = Field(alias="time", default=None)

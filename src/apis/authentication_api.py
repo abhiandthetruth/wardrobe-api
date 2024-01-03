@@ -19,15 +19,14 @@ from fastapi import (  # noqa: F401
 )
 from fastapi.encoders import jsonable_encoder
 from jose import jwt
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.auth_login_post_request import AuthLoginPostRequest
-from openapi_server.models.auth_register_post_request import AuthRegisterPostRequest
-from openapi_server.models.user import User
-from openapi_server.security_api import (
-    SECRET_KEY,
-    ALGORITHM,
+from models.extra_models import TokenModel  # noqa: F401
+from models.auth_login_post_request import AuthLoginPostRequest
+from models.auth_register_post_request import AuthRegisterPostRequest
+from models.user import User
+from security_api import (
     get_encoded_token,
     get_password_hash,
+    verify_password_hash,
 )
 
 router = APIRouter()
@@ -49,21 +48,14 @@ async def auth_login_post(
     auth_login_post_request: AuthLoginPostRequest = Body(None, description=""),
 ) -> None:
     """Endpoint for user login and authentication."""
-    email_id = auth_login_post_request.email_id
-    user: User
-    if (
-        user := request.app.database["users"].find_one(
-            {
-                "email_id": email_id,
-                "password": get_password_hash(auth_login_post_request.password),
-            },
-            {"_id": 0},
-        )
-    ) is not None:
-        response.headers["X-Auth-Token"] = get_encoded_token({"user_id": user.user_id})
+    email_id = str(auth_login_post_request.email_id)
+    user_dict_from_db = request.app.database["users"].find_one({"email_id": email_id}, {"_id": 0})
+    user: User = User(**user_dict_from_db)
+    print(f"password hash {user.password}")
+    if user_dict_from_db is not None and verify_password_hash(auth_login_post_request.password, user.password):
+        response.headers["X-Auth-Token"] = get_encoded_token({"user_id": str(user.user_id)})
         response.status_code = 204
         return response
-
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"User with ID {email_id} not found",

@@ -23,7 +23,7 @@ class Wardrobe(BaseModel):
     """
 
     wardrobe_id: UUID4 = Field(
-        alias="wardrobe_id", default_factory=uuid4, const=True)
+        alias="wardrobe_id", default_factory=uuid4, Literal=True)
     name: str = Field(alias="name", default=None)
     location: str = Field(alias="location", default=None)
     user_id: Optional[UUID4] = Field(alias="user")

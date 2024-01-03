@@ -19,9 +19,9 @@ from fastapi import (  # noqa: F401
 )
 from fastapi.encoders import jsonable_encoder
 
-from openapi_server.models.extra_models import TokenModel  # noqa: F401
-from openapi_server.models.wardrobe import Wardrobe
-from openapi_server.security_api import get_token_bearerAuth
+from models.extra_models import TokenModel  # noqa: F401
+from models.wardrobe import Wardrobe
+from security_api import get_token_bearerAuth
 
 router = APIRouter()
 COLLECTION = "wardrobes"
@@ -86,7 +86,7 @@ async def wardrobes_post(
 async def wardrobes_wardrobe_id_delete(
     request: Request,
     response: Response,
-    wardrobe_id: str = Path(None, description=""),
+    wardrobe_id: str = Path(description=""),
     token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
     """Delete an existing wardrobe."""
@@ -114,7 +114,7 @@ async def wardrobes_wardrobe_id_delete(
 )
 async def wardrobes_wardrobe_id_get(
     request: Request,
-    wardrobe_id: str = Path(None, description=""),
+    wardrobe_id: str = Path(description=""),
     token: TokenModel = Depends(get_token_bearerAuth)
 ) -> Wardrobe:
     """Get a specific wardrobe by its ID."""
@@ -138,7 +138,7 @@ async def wardrobes_wardrobe_id_get(
 )
 async def wardrobes_wardrobe_id_put(
     request: Request,
-    wardrobe_id: str = Path(None, description=""),
+    wardrobe_id: str = Path(description=""),
     wardrobe: Wardrobe = Body(None, description=""),
     token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:

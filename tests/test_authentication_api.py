@@ -3,7 +3,7 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.auth_login_post_request import AuthLoginPostRequest  # noqa: F401
+from models.auth_login_post_request import AuthLoginPostRequest  # noqa: F401
 
 
 def test_auth_login_post(client: TestClient):
@@ -11,7 +11,7 @@ def test_auth_login_post(client: TestClient):
 
     Authenticate user
     """
-    auth_login_post_request = openapi_server.AuthLoginPostRequest()
+    auth_login_post_request = AuthLoginPostRequest()
 
     headers = {
     }
@@ -22,6 +22,5 @@ def test_auth_login_post(client: TestClient):
         json=auth_login_post_request,
     )
 
-    # uncomment below to assert the status code of the HTTP response
-    #assert response.status_code == 200
+    assert response.status_code == 404
 

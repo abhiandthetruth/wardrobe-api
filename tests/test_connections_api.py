@@ -3,7 +3,7 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.connections_add_post_request import ConnectionsAddPostRequest  # noqa: F401
+from models.connections_add_post_request import ConnectionsAddPostRequest  # noqa: F401
 
 
 def test_connections_add_post(client: TestClient):
@@ -11,7 +11,7 @@ def test_connections_add_post(client: TestClient):
 
     Add a connection between users
     """
-    connections_add_post_request = openapi_server.ConnectionsAddPostRequest()
+    connections_add_post_request = ConnectionsAddPostRequest()
 
     headers = {
         "Authorization": "Bearer special-key",

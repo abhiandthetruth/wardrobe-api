@@ -3,13 +3,13 @@
 from fastapi.testclient import TestClient
 
 
-from openapi_server.models.wardrobe import Wardrobe  # noqa: F401
+from models.item import Item  # noqa: F401
 
 
-def test_wardrobes_get(client: TestClient):
-    """Test case for wardrobes_get
+def test_items_get(client: TestClient):
+    """Test case for items_get
 
-    Get all wardrobes
+    Get all items
     """
 
     headers = {
@@ -17,7 +17,7 @@ def test_wardrobes_get(client: TestClient):
     }
     response = client.request(
         "GET",
-        "/wardrobes",
+        "/items",
         headers=headers,
     )
 
@@ -25,31 +25,10 @@ def test_wardrobes_get(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_wardrobes_post(client: TestClient):
-    """Test case for wardrobes_post
+def test_items_item_id_delete(client: TestClient):
+    """Test case for items_item_id_delete
 
-    Add a new wardrobe
-    """
-    wardrobe = {"name":"name","location":"location","items":["046b6c7f-0b8a-43b9-b35d-6489e6daee91","046b6c7f-0b8a-43b9-b35d-6489e6daee91"]}
-
-    headers = {
-        "Authorization": "Bearer special-key",
-    }
-    response = client.request(
-        "POST",
-        "/wardrobes",
-        headers=headers,
-        json=wardrobe,
-    )
-
-    # uncomment below to assert the status code of the HTTP response
-    #assert response.status_code == 200
-
-
-def test_wardrobes_wardrobe_id_delete(client: TestClient):
-    """Test case for wardrobes_wardrobe_id_delete
-
-    Delete a wardrobe
+    Delete an item
     """
 
     headers = {
@@ -57,7 +36,7 @@ def test_wardrobes_wardrobe_id_delete(client: TestClient):
     }
     response = client.request(
         "DELETE",
-        "/wardrobes/{wardrobe_id}".format(wardrobe_id='wardrobe_id_example'),
+        "/items/{item_id}".format(item_id='item_id_example'),
         headers=headers,
     )
 
@@ -65,10 +44,10 @@ def test_wardrobes_wardrobe_id_delete(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_wardrobes_wardrobe_id_get(client: TestClient):
-    """Test case for wardrobes_wardrobe_id_get
+def test_items_item_id_get(client: TestClient):
+    """Test case for items_item_id_get
 
-    Get a wardrobe by ID
+    Get an item by ID
     """
 
     headers = {
@@ -76,7 +55,7 @@ def test_wardrobes_wardrobe_id_get(client: TestClient):
     }
     response = client.request(
         "GET",
-        "/wardrobes/{wardrobe_id}".format(wardrobe_id='wardrobe_id_example'),
+        "/items/{item_id}".format(item_id='item_id_example'),
         headers=headers,
     )
 
@@ -84,21 +63,42 @@ def test_wardrobes_wardrobe_id_get(client: TestClient):
     #assert response.status_code == 200
 
 
-def test_wardrobes_wardrobe_id_put(client: TestClient):
-    """Test case for wardrobes_wardrobe_id_put
+def test_items_item_id_put(client: TestClient):
+    """Test case for items_item_id_put
 
-    Update a wardrobe
+    Update an item
     """
-    wardrobe = {"name":"name","location":"location","items":["046b6c7f-0b8a-43b9-b35d-6489e6daee91","046b6c7f-0b8a-43b9-b35d-6489e6daee91"]}
+    item = {"image":"image","size":"size","material":"material","name":"name","colors":["colors","colors"],"tags":["tags","tags"]}
 
     headers = {
         "Authorization": "Bearer special-key",
     }
     response = client.request(
         "PUT",
-        "/wardrobes/{wardrobe_id}".format(wardrobe_id='wardrobe_id_example'),
+        "/items/{item_id}".format(item_id='item_id_example'),
         headers=headers,
-        json=wardrobe,
+        json=item,
+    )
+
+    # uncomment below to assert the status code of the HTTP response
+    #assert response.status_code == 200
+
+
+def test_items_post(client: TestClient):
+    """Test case for items_post
+
+    Add a new item
+    """
+    item = {"image":"image","size":"size","material":"material","name":"name","colors":["colors","colors"],"tags":["tags","tags"]}
+
+    headers = {
+        "Authorization": "Bearer special-key",
+    }
+    response = client.request(
+        "POST",
+        "/items",
+        headers=headers,
+        json=item,
     )
 
     # uncomment below to assert the status code of the HTTP response
