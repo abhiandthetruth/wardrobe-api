@@ -43,8 +43,4 @@ def get_password_hash(password: string):
     return hashed_password
 
 def verify_password_hash(password: string, password_hash: string):
-    try:
-        pwd_context.verify(password, password_hash)
-    except UnknownHashError as e:
-        return False
-    return True
+    return pwd_context.verify(password, password_hash)
