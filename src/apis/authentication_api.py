@@ -35,7 +35,18 @@ router = APIRouter()
 @router.post(
     "/auth/login",
     responses={
-        200: {"description": "Success"},
+        200: {
+            "description": "Success", 
+            "headers": { 
+                "X-Auth-Token": {
+                    "schema":{
+                        "type": "string"
+                    },
+                    "description": "header containing the auth token"
+                } 
+            },
+            "content": None
+        },
         401: {"description": "Unauthorized"},
     },
     tags=["Authentication"],
