@@ -17,6 +17,7 @@ from apis.connections_api import router as ConnectionsApiRouter
 from apis.items_api import router as ItemsApiRouter
 from apis.outfits_api import router as OutfitsApiRouter
 from apis.wardrobes_api import router as WardrobesApiRouter
+from apis.users_api import router as UserApiRouter
 from dotenv import dotenv_values
 from pymongo import MongoClient
 
@@ -43,3 +44,4 @@ app.include_router(ConnectionsApiRouter)
 app.include_router(ItemsApiRouter)
 app.include_router(OutfitsApiRouter)
 app.include_router(WardrobesApiRouter)
+app.include_router(UserApiRouter)
