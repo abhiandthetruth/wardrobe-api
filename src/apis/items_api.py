@@ -166,11 +166,12 @@ async def items_item_id_put(
 async def items_post(
     request: Request,
     item: Item = Body(None, description=""),
-    token: TokenModel = Depends(get_token_bearerAuth),
+    token: TokenModel =  Depends(get_token_bearerAuth),
 ) -> None:
     """Create a new wardrobe item."""
+    print("Found token", token, type(token))
     item = jsonable_encoder(item)
-    item.user_id = token.user_id
+    item['user_id'] = token.user_id
     new_item = request.app.database["items"].insert_one(item)
     created_item = request.app.database["items"].find_one(
         {"item_id": new_item.inserted_id}, {"_id": 0}

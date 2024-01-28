@@ -1,0 +1,1482 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Wardrobe Management API",
+        "description": "An API to manage your wardrobe digitally",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Authenticate user",
+                "description": "Endpoint for user login and authentication.",
+                "operationId": "auth_login_post_auth_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/AuthLoginPostRequest"
+                                    }
+                                ],
+                                "title": "Auth Login Post Request"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Success",
+                        "headers": {
+                            "X-Auth-Token": {
+                                "description": "header containing the auth token",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register user",
+                "description": "Endpoint for user registration.",
+                "operationId": "auth_register_post_auth_register_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/AuthRegisterPostRequest"
+                                    }
+                                ],
+                                "title": "Auth Register Post Request"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/connections/add": {
+            "post": {
+                "tags": [
+                    "Connections"
+                ],
+                "summary": "Add a connection between users",
+                "description": "Create a connection between the current user and another user.",
+                "operationId": "connections_add_post_connections_add_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/ConnectionsAddPostRequest"
+                                    }
+                                ],
+                                "title": "Connections Add Post Request"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/items": {
+            "get": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Get all items",
+                "description": "Get a list of all wardrobe items.",
+                "operationId": "items_get_items_get",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Item"
+                                    },
+                                    "type": "array",
+                                    "title": "Response 200 Items Get Items Get"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Add a new item",
+                "description": "Create a new wardrobe item.",
+                "operationId": "items_post_items_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Item"
+                                    }
+                                ],
+                                "title": "Item"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/items/{item_id}": {
+            "delete": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Delete an item",
+                "description": "Delete a wardrobe item.",
+                "operationId": "items_item_id_delete_items__item_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Item not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Get an item by ID",
+                "description": "Get a specific wardrobe item by its ID.",
+                "operationId": "items_item_id_get_items__item_id__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Item"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Item not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Update an item",
+                "description": "Update an existing wardrobe item.",
+                "operationId": "items_item_id_put_items__item_id__put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Item Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Item"
+                                    }
+                                ],
+                                "title": "Item"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Item not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/outfits": {
+            "get": {
+                "tags": [
+                    "Outfits"
+                ],
+                "summary": "Get all outfits",
+                "description": "Get a list of all created outfits.",
+                "operationId": "outfits_get_outfits_get",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Outfit"
+                                    },
+                                    "type": "array",
+                                    "title": "Response 200 Outfits Get Outfits Get"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Outfits"
+                ],
+                "summary": "Add a new outfit",
+                "description": "Create a new outfit from wardrobe items.",
+                "operationId": "outfits_post_outfits_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Outfit"
+                                    }
+                                ],
+                                "title": "Outfit"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/outfits/{outfit_id}": {
+            "delete": {
+                "tags": [
+                    "Outfits"
+                ],
+                "summary": "Delete an outfit",
+                "description": "Delete an existing outfit.",
+                "operationId": "outfits_outfit_id_delete_outfits__outfit_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "outfit_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Outfit Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Outfit not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Outfits"
+                ],
+                "summary": "Get an outfit by ID",
+                "description": "Get a specific outfit by its ID.",
+                "operationId": "outfits_outfit_id_get_outfits__outfit_id__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "outfit_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Outfit Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Outfit"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Outfit not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Outfits"
+                ],
+                "summary": "Update an outfit",
+                "description": "Update an existing outfit.",
+                "operationId": "outfits_outfit_id_put_outfits__outfit_id__put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "outfit_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Outfit Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Outfit"
+                                    }
+                                ],
+                                "title": "Outfit"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Outfit not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wardrobes": {
+            "get": {
+                "tags": [
+                    "Wardrobes"
+                ],
+                "summary": "Get all wardrobes",
+                "description": "Get a list of all user&#39;s wardrobes.",
+                "operationId": "wardrobes_get_wardrobes_get",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wardrobe"
+                                    },
+                                    "type": "array",
+                                    "title": "Response 200 Wardrobes Get Wardrobes Get"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Wardrobes"
+                ],
+                "summary": "Add a new wardrobe",
+                "description": "Create a new wardrobe for the user.",
+                "operationId": "wardrobes_post_wardrobes_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Wardrobe"
+                                    }
+                                ],
+                                "title": "Wardrobe"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ]
+            }
+        },
+        "/wardrobes/{wardrobe_id}": {
+            "delete": {
+                "tags": [
+                    "Wardrobes"
+                ],
+                "summary": "Delete a wardrobe",
+                "description": "Delete an existing wardrobe.",
+                "operationId": "wardrobes_wardrobe_id_delete_wardrobes__wardrobe_id__delete",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "wardrobe_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Wardrobe Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Wardrobe not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Wardrobes"
+                ],
+                "summary": "Get a wardrobe by ID",
+                "description": "Get a specific wardrobe by its ID.",
+                "operationId": "wardrobes_wardrobe_id_get_wardrobes__wardrobe_id__get",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "wardrobe_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Wardrobe Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Wardrobe"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Wardrobe not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Wardrobes"
+                ],
+                "summary": "Update a wardrobe",
+                "description": "Update an existing wardrobe.",
+                "operationId": "wardrobes_wardrobe_id_put_wardrobes__wardrobe_id__put",
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "wardrobe_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Wardrobe Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Wardrobe"
+                                    }
+                                ],
+                                "title": "Wardrobe"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Wardrobe not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Accessory": {
+                "type": "string",
+                "enum": [
+                    "Sunglasses",
+                    "Earrings",
+                    "Bracelets",
+                    "Necklaces",
+                    "Watches",
+                    "Bags",
+                    "Dupatta",
+                    "Caps",
+                    "Rings",
+                    "Anklets"
+                ],
+                "title": "Accessory",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually."
+            },
+            "AuthLoginPostRequest": {
+                "properties": {
+                    "email_id": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "email"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email Id"
+                    },
+                    "password": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "title": "AuthLoginPostRequest",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nAuthLoginPostRequest - a model defined in OpenAPI\n\n    email_id: The email_id of this AuthLoginPostRequest [Optional].\n    password: The password of this AuthLoginPostRequest [Optional]."
+            },
+            "AuthRegisterPostRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "email_id": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email Id"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "title": "AuthRegisterPostRequest",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nAuthRegisterPostRequest - a model defined in OpenAPI\n    name:     The name of this AuthRegisterPostRequest\n    email_id: The email_id of this AuthRegisterPostRequest [Optional].\n    password: The password of this AuthRegisterPostRequest [Optional]."
+            },
+            "Bottomwear": {
+                "type": "string",
+                "enum": [
+                    "Pyjamas",
+                    "Jeans",
+                    "Trousers",
+                    "Skirts",
+                    "Shorts",
+                    "Pants",
+                    "Plazzos",
+                    "Salwar",
+                    "Chudidaar",
+                    "Track Pants"
+                ],
+                "title": "Bottomwear",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nBottomwear - a model defined in OpenAPI"
+            },
+            "ConnectionsAddPostRequest": {
+                "properties": {
+                    "user_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "User Id"
+                    }
+                },
+                "type": "object",
+                "title": "ConnectionsAddPostRequest",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nConnectionsAddPostRequest - a model defined in OpenAPI\n\n    user_id: The user_id of this ConnectionsAddPostRequest [Optional]."
+            },
+            "Footwear": {
+                "type": "string",
+                "enum": [
+                    "Shoes",
+                    "Sandals",
+                    "Heels",
+                    "Flip Flops",
+                    "Ballerinas",
+                    "Boots",
+                    "Socks"
+                ],
+                "title": "Footwear",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nFootwear - a model defined in OpenAPI"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "Item": {
+                "properties": {
+                    "item_id": {
+                        "type": "string",
+                        "format": "uuid4",
+                        "title": "Item Id",
+                        "Literal": true
+                    },
+                    "name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "minLength": 3
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Name"
+                    },
+                    "image": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image"
+                    },
+                    "category": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Accessory"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Bottomwear"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Footwear"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Topwear"
+                            },
+                            {
+                                "$ref": "#/components/schemas/SinglePiece"
+                            },
+                            {
+                                "$ref": "#/components/schemas/Underwear"
+                            }
+                        ],
+                        "title": "Category"
+                    },
+                    "size": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Size"
+                    },
+                    "material": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Material"
+                    },
+                    "time": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "season": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Season"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "occasion": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Occasion"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "tags": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Tags"
+                    },
+                    "colors": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Colors"
+                    },
+                    "user": {
+                        "type": "string",
+                        "title": "User"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "user"
+                ],
+                "title": "Item",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nItem - a model defined in OpenAPI\n\n    name: The name of this Item [Optional].\n    image: The image of this Item [Optional].\n    category: The category of this Item [Optional].\n    size: The size of this Item [Optional].\n    material: The material of this Item [Optional].\n    time: The time of this Item [Optional].\n    season: The season of this Item [Optional].\n    occasion: The occasion of this Item [Optional].\n    tags: The tags of this Item [Optional].\n    colors: The colors of this Item [Optional]."
+            },
+            "Occasion": {
+                "type": "string",
+                "enum": [
+                    "festive",
+                    "work",
+                    "party",
+                    "active",
+                    "casual"
+                ],
+                "title": "Occasion",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nOccasion - a model defined in OpenAPI"
+            },
+            "Outfit": {
+                "properties": {
+                    "outfit_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Outfit Id",
+                        "Literal": true
+                    },
+                    "user Id": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "uuid4"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "User Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "time": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "season": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Season"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "occasion": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Occasion"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "topwears": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Topwears"
+                    },
+                    "bottomwears": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bottomwears"
+                    },
+                    "accessories": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Accessories"
+                    },
+                    "footwears": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Footwears"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "user Id"
+                ],
+                "title": "Outfit",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nOutfit - a model defined in OpenAPI\n\n    name: The name of this Outfit [Optional].\n    time: The time of this Outfit [Optional].\n    season: The season of this Outfit [Optional].\n    occasion: The occasion of this Outfit [Optional].\n    topwears: The topwears of this Outfit [Optional].\n    bottomwears: The bottomwears of this Outfit [Optional].\n    accessories: The accessories of this Outfit [Optional].\n    footwears: The footwears of this Outfit [Optional]."
+            },
+            "Season": {
+                "type": "string",
+                "enum": [
+                    "summer",
+                    "winter",
+                    "spring",
+                    "monsoon"
+                ],
+                "title": "Season",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nSeason - a model defined in OpenAPI"
+            },
+            "SinglePiece": {
+                "type": "string",
+                "enum": [
+                    "Sarees",
+                    "Dresses",
+                    "Jump Suits",
+                    "Lehnga"
+                ],
+                "title": "SinglePiece",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nSinglePiece - a model defined in OpenAPI"
+            },
+            "Time": {
+                "type": "string",
+                "enum": [
+                    "day",
+                    "night"
+                ],
+                "title": "Time",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nTime - a model defined in OpenAPI"
+            },
+            "Topwear": {
+                "type": "string",
+                "enum": [
+                    "T-Shirts",
+                    "Shirts",
+                    "Sweatshirts",
+                    "Jackets",
+                    "Blazers",
+                    "Kurtis",
+                    "Kurtas",
+                    "Tops",
+                    "Shrugs"
+                ],
+                "title": "Topwear",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nTopwear - a model defined in OpenAPI"
+            },
+            "Underwear": {
+                "type": "string",
+                "enum": [
+                    "Underwears",
+                    "Under Shirts",
+                    "Tank Tops",
+                    "Bras"
+                ],
+                "title": "Underwear",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nUnderwear - a model defined in OpenAPI"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "Wardrobe": {
+                "properties": {
+                    "wardrobe_id": {
+                        "type": "string",
+                        "format": "uuid4",
+                        "title": "Wardrobe Id",
+                        "Literal": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "location": {
+                        "type": "string",
+                        "title": "Location"
+                    },
+                    "user": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "uuid4"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "User"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "user"
+                ],
+                "title": "Wardrobe",
+                "description": "NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).\n\nDo not edit the class manually.\n\nWardrobe - a model defined in OpenAPI\n\n    name: The name of this Wardrobe [Optional].\n    location: The location of this Wardrobe [Optional].\n    items: The items of this Wardrobe [Optional]."
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
