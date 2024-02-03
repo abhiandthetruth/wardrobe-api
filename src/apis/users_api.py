@@ -20,23 +20,22 @@ router = APIRouter()
 
 
 @router.get(
-    "/users/{user_id}",
+    "/user",
     responses={
         200: {"model": User, "description": "Success"},
         401: {"description": "Unauthorized"},
         404: {"description": "User not found"},
     },
     tags=["Users"],
-    summary="Get a user by ID",
+    summary="Get logged in user",
     response_model_by_alias=True,
 )
 async def users_user_id_get(
     request: Request,
-    user_id: str = Path(description=""),
     token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
-    """Get a specific user by its ID"""
-    
+    """Get logged in user"""
+    user_id = str(token.user_id)
     if (
         user := request.app.database["users"].find_one(
             {"user_id": user_id}, {"_id": 0, "password": 0}

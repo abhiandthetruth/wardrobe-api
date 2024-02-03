@@ -10,6 +10,7 @@
 """
 
 
+from bson import UuidRepresentation
 from fastapi import FastAPI
 
 from apis.authentication_api import router as AuthenticationApiRouter
@@ -31,7 +32,7 @@ config = dotenv_values(".env")
 
 @app.on_event("startup")
 def startup_db_client():
-    app.mongodb_client = MongoClient(config["ATLAS_URI"])
+    app.mongodb_client = MongoClient(config["ATLAS_URI"], uuidRepresentation='standard')
     app.database = app.mongodb_client[config["DB_NAME"]]
 
 @app.on_event("shutdown")

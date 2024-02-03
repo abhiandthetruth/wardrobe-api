@@ -48,6 +48,7 @@ router = APIRouter()
             "content": None
         },
         401: {"description": "Unauthorized"},
+        404: {"description": "User not found"}
     },
     tags=["Authentication"],
     summary="Authenticate user",

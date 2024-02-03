@@ -29,8 +29,11 @@ def get_token_bearerAuth(credentials: HTTPAuthorizationCredentials = Depends(bea
     :rtype: TokenModel | None
     """
     try:
+        print("Found credentials", credentials.credentials)
         payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        print("Decoded payload", payload)
         tokenModel = TokenModel(**payload)
+        print("User Id is", tokenModel.user_id)
         return tokenModel
     except Exception as e:
         return
