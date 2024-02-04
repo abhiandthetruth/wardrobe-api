@@ -35,7 +35,7 @@ async def users_user_id_get(
     token: TokenModel = Depends(get_token_bearerAuth)
 ) -> None:
     """Get logged in user"""
-    user_id = str(token.user_id)
+    user_id = token.user_id
     if (
         user := request.app.database["users"].find_one(
             {"user_id": user_id}, {"_id": 0, "password": 0}
