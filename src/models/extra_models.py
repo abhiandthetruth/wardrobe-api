@@ -4,4 +4,4 @@ from pydantic import UUID4, BaseModel
 
 class TokenModel(BaseModel):
     """Defines a token model."""
-    user_id: UUID4
+    user_id: str

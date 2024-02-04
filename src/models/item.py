@@ -35,6 +35,6 @@ class Item(BaseModel):
     occasion: Optional[Occasion] = Field(alias="occasion", default=None)
     tags: Optional[List[str]] = Field(alias="tags", default=None)
     colors: Optional[List[Color]] = Field(alias="colors", default=None)
-    user_id: str = Field(alias="user")
+    user_id: str = Field(alias="user_id", default=None)
 
 Item.update_forward_refs()

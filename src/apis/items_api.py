@@ -128,7 +128,7 @@ async def items_item_id_put(
     token: TokenModel = Depends(get_token_bearerAuth),
 ) -> None:
     """Update an existing wardrobe item."""
-    item = {k: v for k, v in item.dict().items() if v is not None}
+    item = {k: v for k, v in item.dict().items() if v is not None and k not in ["user_id", "item_id"]}
 
     if len(item) >= 1:
         update_result = request.app.database["items"].update_one(
@@ -171,7 +171,11 @@ async def items_post(
     """Create a new wardrobe item."""
     print("Found token", token, type(token))
     item = jsonable_encoder(item)
-    item['user_id'] = token.user_id
+    # TODO: convert this to a dependency once it is needed in wardrobes and outfits
+    if token.user_id != item["user_id"]:
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Trying to create an item for another user, sneaky!")
+    item["user_id"] = token.user_id
     new_item = request.app.database["items"].insert_one(item)
     created_item = request.app.database["items"].find_one(
         {"item_id": new_item.inserted_id}, {"_id": 0}
