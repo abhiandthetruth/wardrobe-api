@@ -126,7 +126,7 @@ async def items_item_id_put(
     item_id: str = Path(description=""),
     item: Item = Body(None, description=""),
     token: TokenModel = Depends(get_token_bearerAuth),
-) -> None:
+) -> Item:
     """Update an existing wardrobe item."""
     item = {k: v for k, v in item.dict().items() if v is not None and k not in ["user_id", "item_id"]}
 
@@ -167,7 +167,7 @@ async def items_post(
     request: Request,
     item: Item = Body(None, description=""),
     token: TokenModel =  Depends(get_token_bearerAuth),
-) -> None:
+) -> Item:
     """Create a new wardrobe item."""
     print("Found token", token, type(token))
     item = jsonable_encoder(item)
@@ -178,8 +178,7 @@ async def items_post(
     item["user_id"] = token.user_id
     new_item = request.app.database["items"].insert_one(item)
     created_item = request.app.database["items"].find_one(
-        {"item_id": new_item.inserted_id}, {"_id": 0}
+        {"_id": new_item.inserted_id}, {"_id": 0}
     )
-
     return created_item
     ...
