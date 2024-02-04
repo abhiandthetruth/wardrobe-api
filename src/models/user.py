@@ -18,4 +18,4 @@ class User(BaseModel):
     password: str = Field(alias="password", default=None)
     connections: Optional[List[UUID4]] = Field(alias="connections", default=None)
 
-User.update_forward_refs()
+User.model_rebuild()

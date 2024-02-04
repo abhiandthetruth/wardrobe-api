@@ -18,4 +18,4 @@ class Wardrobe(BaseModel):
     user_id: Optional[UUID4] = Field(alias="user")
 
 
-Wardrobe.update_forward_refs()
+Wardrobe.model_rebuild()

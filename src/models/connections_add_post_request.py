@@ -21,4 +21,4 @@ class ConnectionsAddPostRequest(BaseModel):
 
     user_id: Optional[str] = Field(alias="user_id", default=None)
 
-ConnectionsAddPostRequest.update_forward_refs()
+ConnectionsAddPostRequest.model_rebuild()

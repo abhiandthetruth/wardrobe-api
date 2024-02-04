@@ -28,4 +28,4 @@ class Outfit(BaseModel):
     
 
 
-Outfit.update_forward_refs()
+Outfit.model_rebuild()
