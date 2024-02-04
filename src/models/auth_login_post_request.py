@@ -23,4 +23,4 @@ class AuthLoginPostRequest(BaseModel):
     email_id: Optional[EmailStr] = Field(alias="email_id", default=None)
     password: Optional[str] = Field(alias="password", default=None)
 
-AuthLoginPostRequest.update_forward_refs()
+AuthLoginPostRequest.model_rebuild()
