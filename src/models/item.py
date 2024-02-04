@@ -37,4 +37,4 @@ class Item(BaseModel):
     colors: Optional[List[Color]] = Field(alias="colors", default=None)
     user_id: str = Field(alias="user_id", default=None)
 
-Item.update_forward_refs()
+Item.model_rebuild()

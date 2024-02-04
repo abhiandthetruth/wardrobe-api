@@ -23,4 +23,4 @@ class AuthRegisterPostRequest(BaseModel):
     email_id: EmailStr = Field(alias="email_id", default=None)
     password: str = Field(alias="password", default=None)
 
-AuthRegisterPostRequest.update_forward_refs()
+AuthRegisterPostRequest.model_rebuild()
