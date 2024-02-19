@@ -12,10 +12,11 @@ from passlib.context import CryptContext
 from models.extra_models import TokenModel
 from dotenv import dotenv_values
 from passlib.exc import UnknownHashError
+import os
 
 bearer_auth = HTTPBearer()
 config = dotenv_values('.env')
-SECRET_KEY = config["SECRET_KEY"]
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = config["ALGORITHM"]
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
