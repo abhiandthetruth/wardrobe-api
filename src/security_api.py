@@ -22,7 +22,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_token_bearerAuth(credentials: HTTPAuthorizationCredentials = Depends(bearer_auth)) -> TokenModel:
     """
-    Check and retrieve authentication information from custom bearer token.
+    Check and retrieve authentication information from custom bearer token
 
     :param credentials Credentials provided by Authorization header
     :type credentials: HTTPAuthorizationCredentials
