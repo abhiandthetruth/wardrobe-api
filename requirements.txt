@@ -5,6 +5,7 @@ certifi==2023.11.17
 charset-normalizer==3.3.2
 click==8.1.7
 dnspython==2.4.2
+dropbox==11.36.2
 ecdsa==0.18.0
 email-validator==2.1.0.post1
 exceptiongroup==1.2.0
@@ -26,6 +27,7 @@ pymongo==4.6.1
 pytest==7.4.4
 python-dotenv==1.0.0
 python-jose==3.3.0
+python-multipart
 requests==2.31.0
 rsa==4.9
 sentinels==1.0.0

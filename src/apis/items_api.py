@@ -1,6 +1,10 @@
 # coding: utf-8
 
-from typing import Dict, List  # noqa: F401
+import os
+import random
+from typing import Dict, List
+from dotenv import dotenv_values  # noqa: F401
+import dropbox
 
 from fastapi import (  # noqa: F401
     APIRouter,
@@ -15,6 +19,7 @@ from fastapi import (  # noqa: F401
     Query,
     Response,
     Security,
+    UploadFile,
     status,
 )
 from fastapi.encoders import jsonable_encoder
@@ -24,7 +29,12 @@ from models.item import Item
 from security_api import get_token_bearerAuth
 
 router = APIRouter()
-
+config = dotenv_values('.env')
+dbx = dropbox.Dropbox(
+    app_key=config["DROPBOX_APP_KEY"],
+    app_secret=config["DROPBOX_APP_SECRET"],
+    oauth2_refresh_token=config["DROPBOX_REFRESH_TOKEN"]
+)
 
 @router.get(
     "/items",
@@ -131,15 +141,9 @@ async def items_item_id_put(
     item = {k: v for k, v in item.dict().items() if v is not None and k not in ["user_id", "item_id"]}
 
     if len(item) >= 1:
-        update_result = request.app.database["items"].update_one(
+        request.app.database["items"].update_one(
             {"item_id": item_id, "user_id": token.user_id}, {"$set": item}
         )
-
-        if update_result.modified_count == 0:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Item with ID {item_id} not found",
-            )
 
     if (
         existing_item := request.app.database["items"].find_one(
@@ -181,4 +185,48 @@ async def items_post(
         {"_id": new_item.inserted_id}, {"_id": 0}
     )
     return created_item
-    ...
+
+@router.post(
+    "/items/{item_id}/images",
+    responses={
+        201: {"description": "Created"},
+        401: {"description": "Unauthorized"},
+    },
+    tags=["Item Images"],
+    summary="Add a new item",
+    response_model_by_alias=True,
+)
+async def items_post(
+    request: Request,
+    image_file: UploadFile,
+    item_id: str = Path(description=""),
+    token: TokenModel =  Depends(get_token_bearerAuth),
+) -> Item:
+    if (
+        item := request.app.database["items"].find_one(
+            {"item_id": item_id, "user_id": token.user_id}, {"_id": 0}
+        )
+    ) is not None:
+        if token.user_id != item["user_id"]:
+            raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Trying to create an item for another user, sneaky!")
+        
+        # support multiple images for an item with the same name since we don't support deletion of existing images
+        image_file_name: str = f"{random.randint(100, 999999)}_{image_file.filename}"
+        dropbox_dest_path: str = f"/{item['user_id']}/{item['item_id']}/{image_file_name}"
+
+        dbx.files_upload(await image_file.read(), dropbox_dest_path, autorename=True)
+        shareable_url = f"{dbx.sharing_create_shared_link_with_settings(dropbox_dest_path).url}&raw=1"
+
+        item["image"] = shareable_url
+        request.app.database["items"].update_one(
+            {"item_id": item_id, "user_id": token.user_id}, {"$set": item}
+        )
+
+        return item
+
+    print("item not found")
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Item with ID {item_id} not found",
+    )
